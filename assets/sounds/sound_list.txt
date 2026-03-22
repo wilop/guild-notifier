@@ -1,0 +1,6 @@
+help        mixkit-technology-computer-calculations-3122.wav
+group       mixkit-retro-game-notification-212.wav
+guild       mixkit-​technology-​notification-​3123.​wav
+private     mixkit-​high-​tech-​bleep-​confirmation-​2520.​wav
+target      mixkit-​sci-​fi-​confirmation-​914.​wav
+zoom        mixkit-​alien-​technology-​button-​3118.​wav

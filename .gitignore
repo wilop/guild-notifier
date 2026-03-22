@@ -1,0 +1,5 @@
+.kateproject
+*.swp
+*.log
+iup-3.32
+iup-3.32-Lua
