@@ -1,4 +1,4 @@
-local current_time = nil
+   local current_time = nil
 local notify_queue = {}
 local current = nil
 
@@ -220,6 +220,7 @@ function GuildNotifier.play_sound(sound)
 end
 
 function GuildNotifier.push_notification(title, subtitle, msg, icon)
+    if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
     if #notify_queue >= MAX_QUEUE then
         table.remove(notify_queue, 1)
     end

@@ -13,8 +13,6 @@ function GuildNotifier:create_gui()
     local y_size =gkinterface.GetYResolution()
     local x_margin = (x_size - 324) / 2
 
---    local msg = "Tengo que pensar en algo mejor. Por ello voy a tratar de poner un texto muyyy largo con el                     objetivo de agrandar el label y ver si funiciona en incluso agregar otra \n linea al texto."
-
     self.gui_icon_left = iup.label {title="", image = GuildNotifier.gui_data.icon, size="48x48", alignment = 'ACENTER'}
     self.gui_icon_right = iup.label {title="", image = GuildNotifier.gui_data.icon, size="48x48", alignment = 'ACENTER'}
     self.title = iup.label {title = GuildNotifier.gui_data.title, expand = 'HORIZONTAL', alignment = "ACENTER", wordwrap = 'YES'}
@@ -122,23 +120,22 @@ function GuildNotifier:create_gui()
 end
 
 function GuildNotifier:set_gui_data(data)
-    self.gui_data.title = tostring(data.title or "")
-    self.gui_data.subtitle = tostring(data.subtitle or "")
-    self.gui_data.msg = tostring(data.msg or "")
-    self.title.title = self.gui_data.title
-    self.subtitle.title = self.gui_data.subtitle
-    self.message.title = self.gui_data.msg
-    local icon = tostring(data.icon or "IDLE")
-    self:set_icon(icon)
-    self:icon_blinker(250, 5)
-    self:refresh()
+self.gui_data.title = data.title
+self.gui_data.subtitle = data.subtitle
+self.gui_data.msg = data.msg
+self.title.title = self.gui_data.title
+self.subtitle.title = self.gui_data.subtitle
+self.message.title = self.gui_data.msg
+local icon = data.icon
+self:set_icon(icon)
+self:icon_blinker(250, 5)
+self:refresh()
 end
 
 function GuildNotifier:set_icon(icon)
-    self.gui_data.icon = tostring(GuildNotifier.icons[icon] or "")
-    self.gui_icon_left.image = self.gui_data.icon
-    self.gui_icon_right.image = self.gui_data.icon
-    console_print("set_icon: [".. tostring(self.gui_data.icon).."]")
+self.gui_data.icon = GuildNotifier.icons[icon]
+self.gui_icon_left.image = self.gui_data.icon
+self.gui_icon_right.image = self.gui_data.icon
 end
 
 function GuildNotifier:icon_blinker(timeout, times)
@@ -219,7 +216,6 @@ end
 
 function GuildNotifier:init()
     if not GuildNotifier.gn_enable then return end
-    --  if GuildNotifier.mode_sound then return end
     if self:create_gui() then
         self:show()
         console_print("Starting...")
