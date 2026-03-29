@@ -85,7 +85,7 @@ function GuildNotifier.target:OnEvent(e, data)
     console_print("entrando a funcion target")
     console_print(data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
-    if e ~= "target" or data == nil then return end
+    if e ~= "TARGET" or data == nil then return end
 
     local target = {target = "-", health = -1, distance = -1, faction = "-", guild = "-", ship = "-"}
     for k,v in string.gmatch(data, "([^|=]+)=([^|]+)") do
@@ -104,11 +104,11 @@ function GuildNotifier.target:OnEvent(e, data)
     console_print(e)
     console_print(GuildNotifier.icons[e])
     console_print("o fue aqui")
-    GuildNotifier:set_icon("targe")
-    GuildNotifier.push_notification(target.target, target.guild, msg, "targe") -- Arguments: title, subtitle, msg, icon
+    GuildNotifier:set_icon("TARGET")
+    GuildNotifier.push_notification(target.target, target.guild, msg, "TARGET") -- Arguments: title, subtitle, msg, icon
     GuildNotifier.play_sound(e)
 end
-RegisterEvent(GuildNotifier.target, "target");
+RegisterEvent(GuildNotifier.target, "TARGET");
 
 -- Send a HELP message when your health is less than 50%
 GuildNotifier.help_seeker = {}

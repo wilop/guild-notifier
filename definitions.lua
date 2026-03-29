@@ -32,9 +32,15 @@ GuildNotifier.chat_events = {
     ["CHAT_MSG_PRIVATE"] = true,
     ["CHAT_MSG_GROUP"] = true,
     ["CHAT_MSG_GUILD"] = true,
-    ["GUILD_MEMBER_ADDED"] = true,
+}
+
+GuildNotifier.battle_events = {
     ["HELP"] = true,
-    ["target"] = true,
+    ["TARGET"] = true,
+}
+
+GuildNotifier.common_events = {
+    ["GUILD_MEMBER_ADDED"] = true,
     ["ZOOM"] = true,
     ["IDLE"] = true,
 }
@@ -45,7 +51,7 @@ GuildNotifier.sounds = {
     ["CHAT_MSG_GUILD"] = sounds.."guild.wav",
     ["GUILD_MEMBER_ADDED"] = sounds.."guild.wav",
     ["HELP"] = sounds.."help.wav",
-    ["target"] = sounds.."target.wav",
+    ["TARGET"] = sounds.."target.wav",
     ["ZOOM"] = sounds.."zoom.wav",
 }
 
@@ -55,7 +61,7 @@ GuildNotifier.icons = {
     ["CHAT_MSG_GUILD"] = icons.."msg_guild.png",
     ["GUILD_MEMBER_ADDED"] = GUILD_ICON,
     ["HELP"] = icons.."help.png",
-    ["target"] = icons.."target.png", -- TODO: Cambiar a targe sí se genera un error.
+    ["TARGET"] = icons.."target.png", -- TODO: Cambiar a targe sí se genera un error.
     ["IDLE"] = PROFILE_ICON,
 }
 
@@ -65,6 +71,6 @@ GuildNotifier.tests = {
     ["3"] = {test = "CHAT_MSG_GUILD", msg = "A guild test message"},
     ["4"] = {test = "GUILD_MEMBER_ADDED", msg = "Test, member joined"},
     ["5"] = {test = "HELP", msg = "Help"},
-    ["6"] = {test = "target", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur"},
+    ["6"] = {test = "TARGET", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur"},
 }
 
