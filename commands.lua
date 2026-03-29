@@ -91,7 +91,7 @@ function GuildNotifier.test(t)
     end
     if GuildNotifier.tests[t] then
         print(string.format("Guild Notifier: Running test %s ...[%s]",t ,GuildNotifier.tests[t].test ))
-        ProcessEvent("TEST", GuildNotifier.tests[t])
+        GuildNotifier.tester(GuildNotifier.tests[t])
     else
         print("Guild Notifier: Running a test...(help)")
         print("Usage: /gn test # | 2 - 6")

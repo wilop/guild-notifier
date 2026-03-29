@@ -1,30 +1,6 @@
-   local current_time = nil
+local current_time = nil
 local notify_queue = {}
 local current = nil
-
--- Trigger the events and test the notifications
-GuildNotifier.tester ={}
-function GuildNotifier.tester:OnEvent(e, data)
-    if e ~="TEST" and data == nil then return end
-
-    local test = data.test
-    local name, _, guildtag = GuildNotifier.get_player_info()
-    guildtag = guildtag or ""
-    local sound = data.test
-    local icon =  data.test
-    local msg = data.msg
-    if test == "HELP" then
-        ProcessEvent(test, {name = name})
-    elseif test == "target" then
-        ProcessEvent(test, data.msg)
-    elseif test == "GUILD_MEMBER_ADDED" then
-        ProcessEvent(test)
-    else
-        GuildNotifier.push_notification(name, guildtag, msg, icon) -- Arguments: title, subtitle, msg, icon
-        GuildNotifier.play_sound(sound)
-    end
-end
-RegisterEvent(GuildNotifier.tester, "TEST");
 
 -- BATTLE MODE
 --CHAT_MSG_CHANNEL_EMOTE
@@ -85,7 +61,7 @@ function GuildNotifier.target:OnEvent(e, data)
     console_print("entrando a funcion target")
     console_print(data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
-    if e ~= "TARGET" or data == nil then return end
+    if e ~= "MARK" or data == nil then return end
 
     local target = {target = "-", health = -1, distance = -1, faction = "-", guild = "-", ship = "-"}
     for k,v in string.gmatch(data, "([^|=]+)=([^|]+)") do
@@ -104,11 +80,11 @@ function GuildNotifier.target:OnEvent(e, data)
     console_print(e)
     console_print(GuildNotifier.icons[e])
     console_print("o fue aqui")
-    GuildNotifier:set_icon("TARGET")
-    GuildNotifier.push_notification(target.target, target.guild, msg, "TARGET") -- Arguments: title, subtitle, msg, icon
+    GuildNotifier:set_icon(e)
+    GuildNotifier.push_notification(target.target, target.guild, msg, e) -- Arguments: title, subtitle, msg, icon
     GuildNotifier.play_sound(e)
 end
-RegisterEvent(GuildNotifier.target, "TARGET");
+RegisterEvent(GuildNotifier.target, "MARK");
 
 -- Send a HELP message when your health is less than 50%
 GuildNotifier.help_seeker = {}
