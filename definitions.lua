@@ -61,7 +61,7 @@ GuildNotifier.icons = {
     ["CHAT_MSG_GUILD"] = icons.."msg_guild.png",
     ["GUILD_MEMBER_ADDED"] = GUILD_ICON,
     ["HELP"] = icons.."help.png",
-    ["MARK"] = icons.."target.png", -- TODO: Cambiar a targe sí se genera un error.
+    ["MAR"] = icons.."target.png", -- TODO: Cambiar a MAR sí se genera un error.
     ["IDLE"] = PROFILE_ICON,
 }
 

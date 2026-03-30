@@ -9,6 +9,7 @@ GuildNotifier.gui_data = {
 }
 
 function GuildNotifier:create_gui()
+    console_print("Entró a create_gui")
     local x_size =gkinterface.GetXResolution()
     local y_size =gkinterface.GetYResolution()
     local x_margin = (x_size - 324) / 2
@@ -115,27 +116,28 @@ function GuildNotifier:create_gui()
         }
 
     end
-
+    console_print("Salió de create_gui")
     return true
 end
 
 function GuildNotifier:set_gui_data(data)
-self.gui_data.title = data.title
-self.gui_data.subtitle = data.subtitle
-self.gui_data.msg = data.msg
-self.title.title = self.gui_data.title
-self.subtitle.title = self.gui_data.subtitle
-self.message.title = self.gui_data.msg
-local icon = data.icon
-self:set_icon(icon)
-self:icon_blinker(250, 5)
-self:refresh()
+    self.gui_data.title = data.title
+    self.gui_data.subtitle = data.subtitle
+    self.gui_data.msg = data.msg
+    self.title.title = self.gui_data.title
+    self.subtitle.title = self.gui_data.subtitle
+    self.message.title = self.gui_data.msg
+    local icon = data.icon
+    self:set_icon(icon)
+    self:icon_blinker(250, 5)
+    self:refresh()
+    console_print("Salió de set_gui_data")
 end
 
 function GuildNotifier:set_icon(icon)
-self.gui_data.icon = GuildNotifier.icons[icon]
-self.gui_icon_left.image = self.gui_data.icon
-self.gui_icon_right.image = self.gui_data.icon
+    self.gui_data.icon = GuildNotifier.icons[icon]
+    self.gui_icon_left.image = self.gui_data.icon
+    self.gui_icon_right.image = self.gui_data.icon
 end
 
 function GuildNotifier:icon_blinker(timeout, times)
@@ -160,7 +162,7 @@ function GuildNotifier:icon_blinker(timeout, times)
 end
 
 function GuildNotifier:fade(timeout, state)
- --   print(state)
+    console_print("Entrando a fade")
     if not GuildNotifier.states[state] then return false end
     if GuildNotifier.states[state] == GuildNotifier.state then return end
 
@@ -175,7 +177,7 @@ function GuildNotifier:fade(timeout, state)
             if s <= 0 then
                 return
             end
-           -- self:refresh()
+           --self:refresh()
             self:destroy_gui()
             Timer():SetTimeout(timeout, function()
                 self:init()
@@ -186,10 +188,28 @@ function GuildNotifier:fade(timeout, state)
         animate(1)
 
     end
+    console_print("Saliendo de fade")
     return true
 end
 
 function GuildNotifier:refresh()
+-- Suponiendo que HUD.pluginlayer es tu contenedor (vbox/hbox/etc)
+    local found = false
+    local i = 0
+    while HUD.pluginlayer[i] do
+        if HUD.pluginlayer[i] == self.gui then
+            found = true
+            break
+        end
+        i = i + 1
+    end
+
+    if found then
+        print("✅ self.gui encontrado en la lista de hijos de HUD.pluginlayer")
+    else
+        print("❌ self.gui no aparece en los hijos de HUD.pluginlayer")
+    end
+
     if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state then
         iup.Refresh(self.gui)
     end

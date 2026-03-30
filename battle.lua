@@ -77,8 +77,8 @@ local msg = string.format(format_notification, target.ship, target.health, targe
 console_print(e)
 console_print(GuildNotifier.icons[e])
 console_print("o fue aqui")
-GuildNotifier:set_icon(e)
-GuildNotifier.push_notification(target.target, target.guild, msg, e) -- Arguments: title, subtitle, msg, icon
+GuildNotifier:set_icon("MAR")
+GuildNotifier.push_notification(target.target, target.guild, msg, "MAR") -- Arguments: title, subtitle, msg, icon
 GuildNotifier.play_sound(e)
 end
 RegisterEvent(GuildNotifier.target, "MARK");
