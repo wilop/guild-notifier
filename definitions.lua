@@ -46,12 +46,12 @@ GuildNotifier.common_events = {
 }
 
 GuildNotifier.sounds = {
-    ["CHAT_MSG_PRIVATE"] = sounds.."private.wav",
+    ["CHAT_MSG_PRIVATE"] = sounds.."private.wav", -- TODO: Cambiar sí se genera un error.
     ["CHAT_MSG_GROUP"] = sounds.."group.wav",
     ["CHAT_MSG_GUILD"] = sounds.."guild.wav",
     ["GUILD_MEMBER_ADDED"] = sounds.."guild.wav",
     ["HELP"] = sounds.."help.wav",
-    ["MARK"] = sounds.."target.wav",
+    ["MARK"] = sounds.."target.wav", -- TODO: Cambiar sí se genera un error.
     ["ZOOM"] = sounds.."zoom.wav",
 }
 
@@ -70,7 +70,7 @@ GuildNotifier.tests = {
     ["2"] = {test = "CHAT_MSG_GROUP", msg = "A group test message"},
     ["3"] = {test = "CHAT_MSG_GUILD", msg = "A guild test message"},
     ["4"] = {test = "GUILD_MEMBER_ADDED", msg = "Test, member joined"},
-    ["5"] = {test = "HELP", msg = "Help"},
-    ["6"] = {test = "MARK", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur"},
+ --   ["5"] = {test = "HELP", msg = "Help"},
+ --   ["6"] = {test = "MARK", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur"},
 }
 

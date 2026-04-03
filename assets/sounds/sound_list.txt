@@ -4,3 +4,5 @@ guild       mixkit-​technology-​notification-​3123.​wav
 private     mixkit-​high-​tech-​bleep-​confirmation-​2520.​wav
 target      mixkit-​sci-​fi-​confirmation-​914.​wav
 zoom        mixkit-​alien-​technology-​button-​3118.​wav
+
+NOTE: private and target needed to be re encoded to 44100 Hz, stereo, s16, 1411 kb/s

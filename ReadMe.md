@@ -22,7 +22,9 @@ Created by _Otesten Vanar_, a member of [__U.S.D.S.__](https://www.vendetta-onli
 | /gn sound     | Just sound notifications      |
 
 ## About config and media files.
-To disable notifications (permanently) or disable AUTOLOGIN and other settings, edit `config.lua`. Supported files extensions for icons are `*.jpg` and `*.png` and dimensions of _128x128_ or _64x64_; for sounds use `*.wav` or `*.ogg`. 
+To disable notifications (permanently) or disable AUTOLOGIN and other settings, edit `config.lua`. Supported files extensions for icons are `*.jpg` and `*.png` and dimensions of _128x128_ or _64x64_; for sounds use `*.wav` or `*.ogg`.   
+
+NOTE: private.wav and target.wav needed to be re encoded to 44100 Hz, stereo, s16, 1411 kb/s
 
 ## Disclaimer.
 ___GuildNotifier___  works only on the client side. The plugin does not share any kind of data or information with other players.

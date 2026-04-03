@@ -57,15 +57,16 @@ function GuildNotifier.off()
 end
 
 function GuildNotifier.battle_mode()
-        GuildNotifier.gn_enable = true
-        GuildNotifier.mode_battle = not GuildNotifier.mode_battle
-        local bstate = GuildNotifier.mode_battle and "ON" or "OFF"
-        local state = GuildNotifier.mode_battle and "BATTLE" or "IDLE"
-        if GuildNotifier:fade(50, state) then
-            GuildNotifier.play_sound("ZOOM")
-            print("Guild Notifier: Battle mode "..bstate)
-            print("Only displays <<HELP>> and <<TARGETS>> notifcations!")
-        end
+    print("Mode battle: Not yet!")
+--         GuildNotifier.gn_enable = true
+--         GuildNotifier.mode_battle = not GuildNotifier.mode_battle
+--         local bstate = GuildNotifier.mode_battle and "ON" or "OFF"
+--         local state = GuildNotifier.mode_battle and "BATTLE" or "IDLE"
+--         if GuildNotifier:fade(50, state) then
+--             GuildNotifier.play_sound("ZOOM")
+--             print("Guild Notifier: Battle mode "..bstate)
+--             print("Only displays <<HELP>> and <<TARGETS>> notifcations!")
+--         end
 end
 
 function GuildNotifier.sound_mode()
@@ -115,4 +116,4 @@ function GuildNotifier.set_volume(v)
 end
 
 RegisterUserCommand("gn", GuildNotifier.cmd)
-RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)
+-- RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)

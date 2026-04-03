@@ -2,6 +2,7 @@ local current_time = nil
 local notify_queue = {}
 local current = nil
 
+
 -- Switches the icon to the GUILD_ICON while IDLE state
 GuildNotifier.guild_member_added = {}
 function GuildNotifier.guild_member_added:OnEvent(e, data)
@@ -35,6 +36,18 @@ function chatreceiver:OnEvent(e, data)
     GuildNotifier.chat_receiver(self, e, data)
 end
 
+-- Gets info about a player for help or as target. Returns: name, health, guildtag, faction, ship, distance
+function GuildNotifier.get_player_info(name)
+    local name = name or GetPlayerName()
+    local charid = GetCharacterIDByName(name)
+    local health = GetPlayerHealth(charid)
+    local guildtag = GetGuildTag(charid) or "-"
+    local faction = FactionName[GetPlayerFaction(charid)] or "-"
+    local ship = GetPrimaryShipNameOfPlayer(charid) or "-"
+    local distance = GetRadarDistance(charid)
+    distance = distance or -1
+    return name, health, guildtag, faction, ship, distance
+end
 -- Plays a notification sound
 function GuildNotifier.play_sound(sound)
     if GuildNotifier.volume == 0 then
@@ -71,9 +84,9 @@ end
 
 function GuildNotifier.next_notification()
     current = table.remove(notify_queue, 1)
-    console_print("Imprime un current")
+    console_print("🔴 Imprime un current")
     for k,v in pairs(current) do
-        console_print(k)
+        console_print(k..":")
         console_print(v)
     end
     GuildNotifier:set_gui_data(current)
