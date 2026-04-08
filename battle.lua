@@ -4,21 +4,23 @@
 --Arguments: data = {string name, string msg, int faction = factionid, int channelid}
 GuildNotifier.battle_receiver = {}
 function GuildNotifier.battle_receiver:OnEvent(e, data)
+    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "CHAT_MSG_CHANNEL_EMOTE" or data == nil then return end
     if data.channelid ~= 2097 then
-    return
+        return
     end
-    if not GuildNotifier.is_my_partner(data.name) then
-    return end
+    if not GuildNotifier.is_my_partner(data.name) then return end
+
     local msg = data.msg
     if msg == "HELP" then
-    ProcessEvent(msg, {name = data.name})
+        ProcessEvent(msg, {name = data.name})
+        return
     end
 
     local i, j = string.find(msg, "target")
-    msg = string.sub(msg, i, j)
+    msg = string.sub(msg, i, j):upper()
 
-    if msg == "target" then
+    if msg == "TARGET" then
     ProcessEvent(msg, data.msg)
     end
 end
@@ -26,6 +28,7 @@ RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_CHANNEL_EMOTE");
 
 -- Send a TARGET to a partner
 function GuildNotifier.send_target()
+    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     local channel = 2097
     local active_channel = GetActiveChatChannel()
     local name, health, dist, factionid, guild, ship = GetTargetInfo()
@@ -58,7 +61,7 @@ function GuildNotifier.target:OnEvent(e, data)
     console_print("entrando a funcion target")
     console_print(data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
-    if e ~= "MARK" or data == nil then return end
+    if e ~= "TARGET" or data == nil then return end
 
     local target = {target = "-", health = -1, distance = -1, faction = "-", guild = "-", ship = "-"}
     for k,v in string.gmatch(data, "([^|=]+)=([^|]+)") do
@@ -67,9 +70,9 @@ function GuildNotifier.target:OnEvent(e, data)
 
     local icon = e
 
-    local format_print = "\n\tTarget:%s\n\tHealth:%d\n\tDistance:%d\n\tFaction:%s\n\tGuild:%s\n\tShip:%s"
-    print(string.format(format_print,
-    target.target, target.health, target.distance, target.faction, target.guild, target.ship))
+--     local format_print = "\n\tTarget:%s\n\tHealth:%d\n\tDistance:%d\n\tFaction:%s\n\tGuild:%s\n\tShip:%s"
+--     print(string.format(format_print,
+--     target.target, target.health, target.distance, target.faction, target.guild, target.ship))
 
     local format_notification = "%s\n<< <> Health: %d \t\t\tDistance: %d m <> >>\n%s"
     local msg = string.format(format_notification, target.ship, target.health, target.distance, target.faction)
@@ -77,16 +80,16 @@ function GuildNotifier.target:OnEvent(e, data)
     console_print(e)
     console_print(GuildNotifier.icons[e])
     console_print("o fue aqui")
-    GuildNotifier:set_icon("MAR")
-    GuildNotifier.push_notification(target.target, target.guild, msg, "MAR") -- Arguments: title, subtitle, msg, icon
+    GuildNotifier:set_icon(e)
+    GuildNotifier.push_notification(target.target, target.guild, msg, e) -- Arguments: title, subtitle, msg, icon
     GuildNotifier.play_sound(e)
 end
-RegisterEvent(GuildNotifier.target, "MARK");
+RegisterEvent(GuildNotifier.target, "TARGET");
 
 -- Send a HELP message when your health is less than 50%
 GuildNotifier.help_seeker = {}
 function GuildNotifier.help_seeker:OnEvent(e , data)
-if not GuildNotifier.gn_enable and not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "PLAYER_GOT_HIT" then return end
 
     local name, health = GuildNotifier.get_player_info()
@@ -107,7 +110,7 @@ RegisterEvent(GuildNotifier.help_seeker, "PLAYER_GOT_HIT");
 -- Displays a notification asking for your health
 GuildNotifier.helper = {}
 function GuildNotifier.helper:OnEvent(e, data)
-    if not GuildNotifier.gn_enable and not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "HELP" and data == nil then return end
     local name, health, guildtag, faction, ship, distance = GuildNotifier.get_player_info(data.name) --Returns: name, health, guildtag, faction, ship, distance
     local format_notification = "%s\n<< <> Health: %d \t\t\tDistance: %d m <> >>\n%s"

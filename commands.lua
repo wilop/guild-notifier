@@ -57,16 +57,16 @@ function GuildNotifier.off()
 end
 
 function GuildNotifier.battle_mode()
-    print("Mode battle: Not yet!")
---         GuildNotifier.gn_enable = true
---         GuildNotifier.mode_battle = not GuildNotifier.mode_battle
---         local bstate = GuildNotifier.mode_battle and "ON" or "OFF"
---         local state = GuildNotifier.mode_battle and "BATTLE" or "IDLE"
---         if GuildNotifier:fade(50, state) then
---             GuildNotifier.play_sound("ZOOM")
---             print("Guild Notifier: Battle mode "..bstate)
---             print("Only displays <<HELP>> and <<TARGETS>> notifcations!")
---         end
+--  print("Mode battle: Not yet!")
+    GuildNotifier.gn_enable = true
+    GuildNotifier.mode_battle = not GuildNotifier.mode_battle
+    local bstate = GuildNotifier.mode_battle and "ON" or "OFF"
+    local state = GuildNotifier.mode_battle and "BATTLE" or "IDLE"
+    if GuildNotifier:fade(50, state) then
+        GuildNotifier.play_sound("ZOOM")
+        print("Guild Notifier: Battle mode "..bstate)
+        print("Only displays <<HELP>> and <<TARGETS>> notifcations!")
+    end
 end
 
 function GuildNotifier.sound_mode()
@@ -95,7 +95,7 @@ function GuildNotifier.test(t)
         GuildNotifier.tester(GuildNotifier.tests[t])
     else
         print("Guild Notifier: Running a test...(help)")
-        print("Usage: /gn test # | 2 - 6")
+        print("Usage: /gn test # | 1 - 6")
         print("Example: /gn test 2")
     end
 end
@@ -116,4 +116,5 @@ function GuildNotifier.set_volume(v)
 end
 
 RegisterUserCommand("gn", GuildNotifier.cmd)
--- RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)
+RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)
+gkinterface.BindCommand(gkinterface.GetInputCodeByName("0"), "gn_target")

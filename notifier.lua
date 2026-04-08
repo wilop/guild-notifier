@@ -22,7 +22,9 @@ RegisterEvent(GuildNotifier.guild_member_added, "GUILD_MEMBER_ADDED");
 GuildNotifier.chat_receiver = chatreceiver.OnEvent
 function chatreceiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
-    if GuildNotifier.chat_events[e]  then
+--     if GuildNotifier.mode_battle then return end
+
+    if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
         if data ~= nil and data.name ~= GetPlayerName() then
             local name = data.name
             local charid = GetCharacterIDByName(name)
@@ -60,6 +62,7 @@ end
 
 function GuildNotifier.push_notification(title, subtitle, msg, icon)
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
+
     if #notify_queue >= MAX_QUEUE then
         table.remove(notify_queue, 1)
     end

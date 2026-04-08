@@ -15,7 +15,7 @@ function GuildNotifier.tester(data)
 
     if test == "HELP" then
     ProcessEvent(test, {name = name})
-    elseif test == "MARK" then
+    elseif test == "TARGET" then
         ProcessEvent(test, data.msg)
     elseif test == "GUILD_MEMBER_ADDED" then
         ProcessEvent(test)
