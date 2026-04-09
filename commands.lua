@@ -70,18 +70,18 @@ function GuildNotifier.battle_mode()
 end
 
 function GuildNotifier.sound_mode()
-    print("Mode sound: Not yet!")
---     GuildNotifier.gn_enable = true
---     GuildNotifier.mode_sound = not GuildNotifier.mode_sound
---     local bstate = GuildNotifier.mode_sound and "ON" or "OFF"
---     local state = GuildNotifier.mode_sound and "HIDDEN" or "IDLE"
---     if GuildNotifier:fade(50, state) then
---         GuildNotifier.mode_battle = false
---         local vol = tostring(VOLUME) or "3"
---         GuildNotifier.set_volume(vol)
---         print("Guild Notifier: Sound mode "..bstate)
---         print("Just plays sounds!")
---     end
+--  print("Mode sound: Not yet!")
+    GuildNotifier.gn_enable = true
+    GuildNotifier.mode_sound = not GuildNotifier.mode_sound
+    local bstate = GuildNotifier.mode_sound and "ON" or "OFF"
+    local state = GuildNotifier.mode_sound and "HIDDEN" or "IDLE"
+    if GuildNotifier:fade(50, state) then
+        GuildNotifier.mode_battle = false
+        local vol = tostring(VOLUME) or "3"
+        GuildNotifier.set_volume(vol)
+        print("Guild Notifier: Sound mode "..bstate)
+        print("Just plays sounds!")
+    end
 end
 
 function GuildNotifier.test(t)

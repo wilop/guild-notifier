@@ -1,5 +1,4 @@
 -- Trigger the events and test the notifications
-
 function GuildNotifier.tester(data)
     if data == nil then return end
     local test = data.test
