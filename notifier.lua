@@ -7,14 +7,15 @@ local current = nil
 GuildNotifier.guild_member_added = {}
 function GuildNotifier.guild_member_added:OnEvent(e, data)
     if e ~= "GUILD_MEMBER_ADDED" then return end
+    if GuildNotifier.state ~= GuildNotifier.states["HIDDEN"] then return end
     if GuildNotifier.state ~= GuildNotifier.states["IDLE"] then return end
-        GuildNotifier.play_sound(e)
-        GuildNotifier:set_icon(e)
-        GuildNotifier:icon_blinker(250, 5)
-        Timer():SetTimeout(2000, function()
-            GuildNotifier:set_icon("IDLE")
-            GuildNotifier:refresh()
-        end)
+    GuildNotifier.play_sound(e)
+    GuildNotifier:set_icon(e)
+    GuildNotifier:icon_blinker(250, 5)
+    Timer():SetTimeout(2000, function()
+        GuildNotifier:set_icon("IDLE")
+        GuildNotifier:refresh()
+    end)
 end
 RegisterEvent(GuildNotifier.guild_member_added, "GUILD_MEMBER_ADDED");
 
