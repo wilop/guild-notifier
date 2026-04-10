@@ -3,11 +3,11 @@ local notify_queue = {}
 local current = nil
 
 
--- Switches the icon to the GUILD_ICON while IDLE state
+-- Switches the icon to the GUILD_ICON when a guild member joins or is added.
 GuildNotifier.guild_member_added = {}
 function GuildNotifier.guild_member_added:OnEvent(e, data)
     if e ~= "GUILD_MEMBER_ADDED" then return end
-    if GuildNotifier.state ~= GuildNotifier.states["HIDDEN"] then return end
+    if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
     if GuildNotifier.state ~= GuildNotifier.states["IDLE"] then return end
     GuildNotifier.play_sound(e)
     GuildNotifier:set_icon(e)
@@ -23,8 +23,6 @@ RegisterEvent(GuildNotifier.guild_member_added, "GUILD_MEMBER_ADDED");
 GuildNotifier.chat_receiver = chatreceiver.OnEvent
 function chatreceiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
---     if GuildNotifier.mode_battle then return end
-
     if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
         if data ~= nil and data.name ~= GetPlayerName() then
             local name = data.name
@@ -51,6 +49,7 @@ function GuildNotifier.get_player_info(name)
     distance = distance or -1
     return name, health, guildtag, faction, ship, distance
 end
+
 -- Plays a notification sound
 function GuildNotifier.play_sound(sound)
     if GuildNotifier.volume == 0 then
@@ -61,6 +60,7 @@ function GuildNotifier.play_sound(sound)
     end
 end
 
+-- Pushes the notification into the message queue.
 function GuildNotifier.push_notification(title, subtitle, msg, icon)
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
 
@@ -86,9 +86,10 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
     end
 end
 
+-- Set and the next notification.
 function GuildNotifier.next_notification()
     current = table.remove(notify_queue, 1)
-    console_print("🔴 Imprime un current")
+    console_print("🔴 Current notification")
     for k,v in pairs(current) do
         console_print(k..":")
         console_print(v)
@@ -97,6 +98,7 @@ function GuildNotifier.next_notification()
     GuildNotifier.update_notification()
 end
 
+-- Update to the next notification or switch to "IDLE" state.
 function GuildNotifier.update_notification()
     if not current then
         return
@@ -107,13 +109,6 @@ function GuildNotifier.update_notification()
         else
             current = nil
             GuildNotifier.play_sound("ZOOM")
---             local data = {
---                 title = "Welcome",
---                 subtitle = "Pilot",
---                 msg = "Thanks for using Guild Notifier.\nHave a great journey!.",
---                 icon = "IDLE",
---             }
---             GuildNotifier.set_gui_data(data)
             GuildNotifier:set_icon("IDLE")
             GuildNotifier:fade(50, "IDLE")
         end
