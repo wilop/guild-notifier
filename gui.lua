@@ -8,8 +8,9 @@ GuildNotifier.gui_data = {
     msg = "Thanks for using Guild Notifier.\nHave a great journey!."
 }
 
+-- Create the gui to be displayed in HUD.
 function GuildNotifier:create_gui()
-    console_print("🔴 Entró a create_gui")
+    console_print("🔴 Begin of create_gui")
     local x_size =gkinterface.GetXResolution()
     local y_size =gkinterface.GetYResolution()
     local x_margin = (x_size - 324) / 2
@@ -18,7 +19,7 @@ function GuildNotifier:create_gui()
     self.gui_icon_right = iup.label {title="", image = GuildNotifier.gui_data.icon, size="48x48", alignment = 'ACENTER'}
     self.title = iup.label {title = GuildNotifier.gui_data.title, expand = 'HORIZONTAL', alignment = "ACENTER", wordwrap = 'YES'}
     self.subtitle = iup.label {title = GuildNotifier.gui_data.subtitle, expand = 'HORIZONTAL', alignment = "ACENTER", wordwrap = 'YES'}
--- local message = iup.label {title = msg  , expand = 'HORIZONTAL', alignment = "ACENTER", wordwrap = 'YES'}
+
     self.message = iup.label{title = GuildNotifier.gui_data.msg, alignment = "ACENTER", multiline = 'YES', wordwrap = 'YES', scrollbar = 'NO', expand = 'YES'}
 
     local wing_left = iup.label {title="", image = GuildNotifier.wing_left, size="128x64", alignment = 'ACENTER'}
@@ -116,17 +117,18 @@ function GuildNotifier:create_gui()
         }
 
     end
-    console_print("🔴 Salió de create_gui")
+    console_print("🔴 End of create_gui")
     return true
 end
 
+-- Set the gui data to be displayed.
 function GuildNotifier:set_gui_data(data)
 
     if not self.title or not self.gui then
-        console_print("⚠️ Intento de update sin GUI listo")
+        console_print("⚠️ Intent of update without a gui.")
         return
     end
-    console_print("🔴 Entrando a set_gui_data")
+    console_print("🔴 Begin of set_gui_data")
     self.gui_data.title = data.title
     self.gui_data.subtitle = data.subtitle
     self.gui_data.msg = data.msg
@@ -137,15 +139,17 @@ function GuildNotifier:set_gui_data(data)
     self:set_icon(data.icon)
     self:icon_blinker(250, 5)
     self:refresh()
-    console_print("🔴 Salió de set_gui_data")
+    console_print("🔴 End of set_gui_data")
 end
 
+-- Set the icon to be displayed.
 function GuildNotifier:set_icon(icon)
     self.gui_data.icon = GuildNotifier.icons[icon]
     self.gui_icon_left.image = self.gui_data.icon
     self.gui_icon_right.image = self.gui_data.icon
 end
 
+-- Animate the icons with a blinking effect.
 function GuildNotifier:icon_blinker(timeout, times)
     if not self.gui_icon_left or not self.gui_icon_right then
         return
@@ -174,8 +178,9 @@ function GuildNotifier:icon_blinker(timeout, times)
     blink(times)
 end
 
+-- Make a transition between the gui states.
 function GuildNotifier:fade(timeout, state)
-    console_print("🔴 Entrando a fade")
+    console_print("🔴 Begin of fade")
     if not GuildNotifier.states[state] then return false end
     if GuildNotifier.states[state] == GuildNotifier.state then return end
 
@@ -185,61 +190,39 @@ function GuildNotifier:fade(timeout, state)
         self:hide()
         return true
     else
-
         local function animate(s)
---             if s <= 0 then
---                 return
---             end
-           --self:refresh()
-            self:destroy_gui()
---             Timer():SetTimeout(timeout, function()
-                self:init()
---                 animate(s - 1)
---                 return
---             end)
+        --self:refresh()
+        self:destroy_gui()
+        self:init()
         end
-            console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1)))
+
+        console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1)))
 
     end
-    console_print("🔴 Saliendo de fade")
+    console_print("🔴 End of fade")
     return true
 end
-
+-- Refresh the gui.
 function GuildNotifier:refresh()
--- -- Suponiendo que HUD.pluginlayer es tu contenedor (vbox/hbox/etc)
---     local found = false
---     local i = 0
---     while HUD.pluginlayer[i] do
---         if HUD.pluginlayer[i] == self.gui then
---             found = true
---             break
---         end
---         i = i + 1
---     end
---
---     if found then
---         print("✅ self.gui encontrado en la lista de hijos de HUD.pluginlayer")
---     else
---         print("❌ self.gui no aparece en los hijos de HUD.pluginlayer")
---     end
-
     if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state then
         iup.Refresh(self.gui)
     end
 end
 
+-- Append the gui in the HUD.
 function GuildNotifier:show()
     if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state then
         iup.Append(HUD.pluginlayer, self.gui)
         iup.Refresh(self.gui)
-       -- GuildNotifier.state = GuildNotifier.states["IDLE"]
     end
 end
 
+-- Hide the gui.
 function GuildNotifier:hide()
     iup.Detach(self.gui)
 end
 
+-- Destroy de gui.
 function GuildNotifier:destroy_gui()
     if self.gui ~= nil then
         iup.Destroy(self.gui)
@@ -247,11 +230,12 @@ function GuildNotifier:destroy_gui()
     end
 end
 
+-- Create and show the gui.
 function GuildNotifier:init()
     if not GuildNotifier.gn_enable then return end
     if self:create_gui() then
         self:show()
-        console_print("Starting...")
+        console_print("GN: Starting...")
     else
         self:hide()
     end
@@ -261,7 +245,6 @@ GuildNotifier:init()
 
 -- Event handlers
 function GuildNotifier:rHUDxscale(e, data)
-    --print("Antes del sesastre")
     self:init()
 end
 

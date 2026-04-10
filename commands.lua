@@ -1,4 +1,4 @@
-
+-- Manage GuildNotifier user commands.
 function GuildNotifier.cmd(_,args)
     if type(args) ~= "table" or not args[1] then
         GuildNotifier.print_help()
@@ -25,11 +25,12 @@ function GuildNotifier.cmd(_,args)
     end
 end
 
+-- Show commands options and usage.
 function GuildNotifier.print_help()
     print("Guild Notifier commands:")
     print("/gn on | off | info | sound | battle | vol # (0-5) | test")
 end
-
+-- Show the plugin information.
 function GuildNotifier.print_info()
     print("Guild Notifier:")
     print(tostring(GuildNotifier.info.description))
@@ -38,6 +39,7 @@ function GuildNotifier.print_info()
     print("Version: " .. tostring(GuildNotifier.info.version))
 end
 
+-- Enable the Guild Notifier and show the gui.
 function GuildNotifier.on()
     GuildNotifier.gn_enable = true
     GuildNotifier.state = GuildNotifier.states["HIDDEN"]
@@ -48,6 +50,7 @@ function GuildNotifier.on()
     end
 end
 
+-- Disable the Guild Notifier and hide the gui.
 function GuildNotifier.off()
     GuildNotifier.gn_enable = false
     if GuildNotifier:fade(50, "HIDDEN") then
@@ -56,6 +59,7 @@ function GuildNotifier.off()
     end
 end
 
+-- Toggle battele mode.
 function GuildNotifier.battle_mode()
 --  print("Mode battle: Not yet!")
     GuildNotifier.gn_enable = true
@@ -70,6 +74,7 @@ function GuildNotifier.battle_mode()
 --     end
 end
 
+-- Toggle sound mode.
 function GuildNotifier.sound_mode()
 --  print("Mode sound: Not yet!")
     GuildNotifier.gn_enable = true
@@ -85,6 +90,7 @@ function GuildNotifier.sound_mode()
     end
 end
 
+-- Run different tests.
 function GuildNotifier.test(t)
     if not GuildNotifier.gn_enable then
         print("Guild Notifier: OFF")
@@ -101,10 +107,12 @@ function GuildNotifier.test(t)
     end
 end
 
+-- Call the send_target function.
 function GuildNotifier.cmd_send_target()
     GuildNotifier.send_target()
 end
 
+-- Adjust or mute the volumen of the sounds effects.
 function GuildNotifier.set_volume(v)
     if GuildNotifier.volume_levels[v] then
         GuildNotifier.volume = GuildNotifier.volume_levels[v]
@@ -116,6 +124,7 @@ function GuildNotifier.set_volume(v)
     end
 end
 
+-- Register and bind user commands.
 RegisterUserCommand("gn", GuildNotifier.cmd)
 RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)
 gkinterface.BindCommand(gkinterface.GetInputCodeByName("0"), "gn_target")
