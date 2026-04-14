@@ -2,5 +2,7 @@
 *.swp
 *.log
 *.kate-swp
+*.tar.gz
+*.zip
 iup-3.32
 iup-3.32-Lua

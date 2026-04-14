@@ -129,9 +129,9 @@ function GuildNotifier:set_gui_data(data)
         return
     end
     console_print("🔴 Begin of set_gui_data")
-    self.gui_data.title = data.title
-    self.gui_data.subtitle = data.subtitle
-    self.gui_data.msg = data.msg
+    self.gui_data.title = data.title or "-"
+    self.gui_data.subtitle = data.subtitle or "-"
+    self.gui_data.msg = data.msg or "-"
     self.title.title = self.gui_data.title
     self.subtitle.title = self.gui_data.subtitle
     self.message.title = self.gui_data.msg

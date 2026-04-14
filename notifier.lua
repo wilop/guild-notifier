@@ -25,9 +25,9 @@ function chatreceiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
     if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
         if data ~= nil and data.name ~= GetPlayerName() then
-            local name = data.name
-            local charid = GetCharacterIDByName(name)
-            local guildtag = data.guildtag or GetGuildTag(charid)
+            local name = data.name or ""
+            local charid = GetCharacterIDByName(name) or ""
+            local guildtag = data.guildtag or GetGuildTag(charid) or ""
             local msg = data.msg or ""
             local icon = e
             GuildNotifier.push_notification(name, guildtag, msg, icon) -- Arguments: title, subtitle, msg, icon
@@ -69,9 +69,9 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
     end
 
     table.insert(notify_queue, {
-        title = title,
-        subtitle = subtitle,
-        msg = msg,
+        title = title or "",
+        subtitle = subtitle or "",
+        msg = msg or "",
         icon = icon,
     })
 
