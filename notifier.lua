@@ -79,8 +79,10 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
         GuildNotifier.next_notification()
         GuildNotifier.play_sound("ZOOM")
         if GuildNotifier.mode_battle then
+            GuildNotifier:set_wings("BATTLE")
             GuildNotifier:fade(50,"BATTLE")
         else
+            GuildNotifier:set_wings("SHOWN")
             GuildNotifier:fade(50,"SHOWN")
         end
     end

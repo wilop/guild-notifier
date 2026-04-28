@@ -4,8 +4,6 @@ local textures = assets_path .. "textures/"
 local icons = assets_path .. "icons/"
 local sounds = assets_path .. "sounds/"
 
-GuildNotifier.wing_left = textures.."wing_left.png"
-GuildNotifier.wing_right = textures.."wing_right.png"
 GuildNotifier.gn_enable = GN_ENABLE
 GuildNotifier.volume = VOLUME * 0.2 or 0.6
 GuildNotifier.mode_battle = false
@@ -53,6 +51,11 @@ GuildNotifier.sounds = {
     ["HELP"] = sounds.."help.wav",
     ["TARGET"] = sounds.."target.wav", -- TODO: Cambiar sí se genera un error.
     ["ZOOM"] = sounds.."zoom.wav",
+}
+
+GuildNotifier.wings = {
+    ["SHOWN"] = {left = textures.."wing_left.png", right = textures.."wing_right.png"},
+    ["BATTLE"] = {left = textures.."wing_battle_left.png", right = textures.."wing_battle_right.png"},
 }
 
 GuildNotifier.icons = {

@@ -1,5 +1,7 @@
 GuildNotifier.gui = iup.hbox {}
 GuildNotifier.gui_data = {
+    wing_left = GuildNotifier.wings["NORMAL"].left,
+    wing_right = GuildNotifier.wings["NORMAL"].right,
     icon = PROFILE_ICON or "",
     fgcolor1 = "",
     fgcolor2 = "",
@@ -22,8 +24,9 @@ function GuildNotifier:create_gui()
 
     self.message = iup.label{title = GuildNotifier.gui_data.msg, alignment = "ACENTER", multiline = 'YES', wordwrap = 'YES', scrollbar = 'NO', expand = 'YES'}
 
-    local wing_left = iup.label {title="", image = GuildNotifier.wing_left, size="128x64", alignment = 'ACENTER'}
-    local wing_right = iup.label {title="", image = GuildNotifier.wing_right, size="128x64", alignment = 'ACENTER'}
+    self.wing_left = iup.label {title="", image = GuildNotifier.gui_data.wing_left, size="128x64", alignment = 'ACENTER'}
+    self.wing_right = iup.label {title="", image = GuildNotifier.gui_data.wing_right, size="128x64", alignment = 'ACENTER'}
+
     local top_separator = iup.label {title = '', image = '', size = 'x1', expand = 'HORIZONTAL', fgcolor = '40 180 240 125 *'}
     local bottom_separator = iup.label {title = '', image = '', size = "x2", expand = 'HORIZONTAL',fgcolor = '40 180 240 125 *'}
 
@@ -35,13 +38,13 @@ function GuildNotifier:create_gui()
             iup.vbox{
                 iup.fill{},
                 iup.hbox {
-                    wing_left,
+                    self.wing_left,
                     iup.hbox {
                         iup.fill{size = -x_margin + 180},
                         self.gui_icon_left,
                         iup.fill{size = -x_margin + 180},
                     },
-                    wing_right,
+                    self.wing_right,
                     gap = 5,
                 },
 
@@ -60,7 +63,7 @@ function GuildNotifier:create_gui()
             iup.vbox {
                 iup.fill{size = y_size - 175},
                 iup.hbox {
-                    wing_left,
+                    self.wing_left,
                     iup.hbox{
                         self.gui_icon_left,
                     },
@@ -78,7 +81,7 @@ function GuildNotifier:create_gui()
                     iup.hbox{
                         self.gui_icon_right,
                     },
-                    wing_right,
+                    self.wing_right,
                 },
                 bottom_separator,
             },
@@ -95,7 +98,7 @@ function GuildNotifier:create_gui()
             iup.vbox {
                 iup.fill{size = y_size - 175},
                 iup.hbox {
-                    wing_left,
+                    self.wing_left,
                     self.gui_icon_left,
                     iup.vbox {
                         top_separator,
@@ -109,7 +112,7 @@ function GuildNotifier:create_gui()
                         },
                     },
                     self.gui_icon_right,
-                    wing_right,
+                    self.wing_right,
                 },
                 bottom_separator,
             },
@@ -144,9 +147,17 @@ end
 
 -- Set the icon to be displayed.
 function GuildNotifier:set_icon(icon)
-    self.gui_data.icon = GuildNotifier.icons[icon]
+    self.gui_data.icon = GuildNotifier.icons[icon] or ""
     self.gui_icon_left.image = self.gui_data.icon
     self.gui_icon_right.image = self.gui_data.icon
+end
+
+-- Set the wings to be displayed.
+function GuildNotifier:set_wings(wing)
+	self.gui_data.wing_left = GuildNotifier.wings[wing].left or ""
+	self.gui_data.wing_right = GuildNotifier.wings[wing].right or ""
+	self.wing_left.image = self.gui_data.wing_left
+	self.wing_right.image = self.gui_data.wing_right
 end
 
 -- Animate the icons with a blinking effect.
