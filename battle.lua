@@ -11,17 +11,22 @@ function GuildNotifier.battle_receiver:OnEvent(e, data)
     end
     if not GuildNotifier.is_my_partner(data.name) then return end
 
-    local msg = data.msg
-    if msg == "HELP" then
-        ProcessEvent(msg, {name = data.name})
-        return
+    local msg = data.msg:upper()
+
+    for k in pairs(GuildNotifier.battle_events) do
+        local i, j = string.find(msg, k)
+        if i ~= nil and j ~= nil then
+            msg = string.sub(msg, i, j):upper()
+            break
+        end
     end
 
-    local i, j = string.find(msg, "target")
-    msg = string.sub(msg, i, j):upper()
-
+    if msg == "HELP" then
+        ProcessEvent(msg, data)
+        return
+    end
     if msg == "TARGET" then
-    ProcessEvent(msg, data.msg)
+        ProcessEvent(msg, data.msg)
     end
 end
 RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_CHANNEL_EMOTE");
@@ -32,6 +37,7 @@ function GuildNotifier.send_target()
     local channel = 2097
     local active_channel = GetActiveChatChannel()
     local name, health, dist, factionid, guild, ship = GetTargetInfo()
+    local sectorid = GetCurrentSectorid() or -1
     local faction = ""
 
     -- name
@@ -42,15 +48,15 @@ function GuildNotifier.send_target()
     guild = guild or ""
     ship = ship or ""
 
-    local format_send = "target=%s|health=%d|distance=%d|faction=%s|guild=%s|ship=%s"
-    local msg = string.format(format_send, name, health, dist, faction, guild, ship)
+    local format_send = "target=%s|health=%d|distance=%d|faction=%s|guild=%s|ship=%s|sector=%d"
+    local msg = string.format(format_send, name, health, dist, faction, guild, ship, sectorid)
     console_print("Un target antes de enviarlo")
     console_print(msg)
 
     if name == nil then return end
     JoinChannel(channel)
     Timer():SetTimeout(50, function ()
-    SendChat("/me "..msg, "CHANNEL", channel)
+        SendChat("/me "..msg, "CHANNEL", channel)
     end)
     JoinChannel(active_channel)
 end
@@ -63,19 +69,23 @@ function GuildNotifier.target:OnEvent(e, data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "TARGET" or data == nil then return end
 
-    local target = {target = "-", health = -1, distance = -1, faction = "-", guild = "-", ship = "-"}
+    local target = {target = "-", health = -1, distance = -1, faction = "-", guild = "-", ship = "-", sector = -1}
     for k,v in string.gmatch(data, "([^|=]+)=([^|]+)") do
-    target[k]=v
+        target[k]=v
     end
 
-    local icon = e
-
+    local charid = GetCharacterIDByName(target.target)
+    if charid ~= nil then
+        target.distance = GetRadarDistance(charid) or -1
+    end
 --     local format_print = "\n\tTarget:%s\n\tHealth:%d\n\tDistance:%d\n\tFaction:%s\n\tGuild:%s\n\tShip:%s"
 --     print(string.format(format_print,
 --     target.target, target.health, target.distance, target.faction, target.guild, target.ship))
 
-    local format_notification = "%s\n<< <> Health: %d \t\t\tDistance: %d m <> >>\n%s"
-    local msg = string.format(format_notification, target.ship, target.health, target.distance, target.faction)
+    local icon = e
+    local format_notification = "%s\n<> Health: %d \t%s\t    Dist: %d m <>\n%s"
+    local sector =ShortLocationStr(target.sector) or "-"
+    local msg = string.format(format_notification, target.ship, target.health, sector, target.distance, target.faction)
 
     console_print(e)
     console_print(GuildNotifier.icons[e])
@@ -92,15 +102,19 @@ function GuildNotifier.help_seeker:OnEvent(e , data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "PLAYER_GOT_HIT" then return end
 
-    local name, health = GuildNotifier.get_player_info()
+    local _, health = GuildNotifier.get_player_info()
     if health == nil or health > 50 then return end
 
+    local sectorid = GetCurrentSectorid() or -1
     local channel = 2097
     local active_channel = GetActiveChatChannel()
     JoinChannel(channel)
-    SendChat("/me HELP", "CHANNEL", channel)
+
+    local msg = string.format("HELP:%d", sectorid)
+
+--     SendChat("/me "..msg, "CHANNEL", channel)
     Timer():SetTimeout(50, function ()
-    SendChat("/me HELP", "CHANNEL", channel)
+        SendChat("/me "..msg, "CHANNEL", channel)
     end)
     JoinChannel(active_channel)
 end
@@ -113,8 +127,12 @@ function GuildNotifier.helper:OnEvent(e, data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "HELP" and data == nil then return end
     local name, health, guildtag, faction, ship, distance = GuildNotifier.get_player_info(data.name) --Returns: name, health, guildtag, faction, ship, distance
-    local format_notification = "%s\n<< <> Health: %d \t\t\tDistance: %d m <> >>\n%s"
-    local msg = string.format(format_notification, ship, health, distance, faction)
+    local sectorid = string.match(data.msg, ":(%d+)") or -1
+--     print("sector:"..tostring(sectorid))
+    local sector = ShortLocationStr(sectorid) or "-"
+
+    local format_notification = "%s\n<> Health: %d \t%s\t    Dist: %d m <>\n%s"
+    local msg = string.format(format_notification, ship, health, sector, distance, faction)
     local icon = e
     GuildNotifier:set_icon(e)
     GuildNotifier.push_notification(name, guildtag, msg, icon) -- Arguments: title, subtitle, msg, icon
@@ -132,7 +150,7 @@ function GuildNotifier.is_my_partner(name)
 
     local my_name, _, my_guildtag = GuildNotifier.get_player_info() --name, health, guildtag, faction, ship, distance
     local partner_name, _, partner_guildtad = GuildNotifier.get_player_info(partner_name)
-    if my_name == partner_name then return false end
+--     if my_name == partner_name then return false end -- TODO: Comment this line for testing purpose.
     if my_guildtag == partner_guildtad then return true end
 
     return false

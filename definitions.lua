@@ -73,7 +73,7 @@ GuildNotifier.tests = {
     ["2"] = {test = "CHAT_MSG_GROUP", msg = "A group test message"},
     ["3"] = {test = "CHAT_MSG_GUILD", msg = "A guild test message"},
     ["4"] = {test = "GUILD_MEMBER_ADDED", msg = "Test, member joined"},
-    ["5"] = {test = "HELP", msg = "Help!"},
-    ["6"] = {test = "TARGET", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur"},
+    ["5"] = {test = "HELP", msg = "HELP:2903"},
+    ["6"] = {test = "TARGET", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur|sector=2903"},
 }
 
