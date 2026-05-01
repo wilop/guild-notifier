@@ -1,7 +1,7 @@
 GuildNotifier.gui = iup.hbox {}
 GuildNotifier.gui_data = {
-    wing_left = GuildNotifier.wings["NORMAL"].left,
-    wing_right = GuildNotifier.wings["NORMAL"].right,
+    wing_left = GuildNotifier.wings["SHOWN"].left,
+    wing_right = GuildNotifier.wings["SHOWN"].right,
     icon = PROFILE_ICON or "",
     fgcolor1 = "",
     fgcolor2 = "",
