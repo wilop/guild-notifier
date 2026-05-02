@@ -5,19 +5,33 @@ local current = nil
 
 -- Switches the icon to the GUILD_ICON when a guild member joins or is added.
 GuildNotifier.guild_member_added = {}
-function GuildNotifier.guild_member_added:OnEvent(e, data)
+function GuildNotifier.guild_member_added:OnEvent(e, charid, rank)
     if e ~= "GUILD_MEMBER_ADDED" then return end
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
-    if GuildNotifier.state ~= GuildNotifier.states["IDLE"] then return end
+    if charid == nil or rank == nil then return end
+    local name = GetPlayerName(charid) or ""
+    local rank_ = GuildNotifier.guild_ranks[rank] or ""
+    local msg = "\nJoined!"
+    local icon = e
+    GuildNotifier.push_notification(name, rank_, msg, icon) -- Arguments: title, subtitle, msg, icon
     GuildNotifier.play_sound(e)
-    GuildNotifier:set_icon(e)
-    GuildNotifier:icon_blinker(250, 5)
-    Timer():SetTimeout(2000, function()
-        GuildNotifier:set_icon("IDLE")
-        GuildNotifier:refresh()
-    end)
 end
 RegisterEvent(GuildNotifier.guild_member_added, "GUILD_MEMBER_ADDED");
+
+-- Switches the icon to the GUILD_ICON when a guild member joins or is added.
+GuildNotifier.guild_member_removed = {}
+function GuildNotifier.guild_member_removed:OnEvent(e, charid, reason)
+    if e ~= "GUILD_MEMBER_REMOVED" then return end
+    if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
+    if charid == nil or reason == nil then return end
+    local name = GetPlayerName(charid) or ""
+    local reason_ = GuildNotifier.guild_removed_reasons[reason] or ""
+    local msg = "\nBye!"
+    local icon = e
+    GuildNotifier.push_notification(name, reason_, msg, icon) -- Arguments: title, subtitle, msg, icon
+    GuildNotifier.play_sound(e)
+end
+RegisterEvent(GuildNotifier.guild_member_removed, "GUILD_MEMBER_REMOVED");
 
 -- Receives messages from chat events
 GuildNotifier.chat_receiver = chatreceiver.OnEvent

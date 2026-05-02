@@ -5,7 +5,7 @@ function GuildNotifier.tester(data)
 
     if GuildNotifier.chat_events[test] then print("This test requires battle mode OFF.") end
     if GuildNotifier.battle_events[test] then print("This test requires battle mode ON.") end
-    if GuildNotifier.common_events[test] then print("This test requires to be idle.") end
+    if GuildNotifier.common_events[test] then print("This test works with battle mode ON and OFF.") end
 
     local name, _, guildtag = GuildNotifier.get_player_info()
     local sound = data.test
@@ -17,7 +17,8 @@ function GuildNotifier.tester(data)
     elseif test == "TARGET" then
         ProcessEvent(test, data.msg)
     elseif test == "GUILD_MEMBER_ADDED" then
-        ProcessEvent(test)
+        local charid = GetCharacterIDByName(name)
+        ProcessEvent(test, charid, 0)
     else
         console_print("🔴 push_notification xpcall: ".. tostring(xpcall(GuildNotifier.push_notification, debug.traceback, name, guildtag, msg, icon)))
         console_print(sound)

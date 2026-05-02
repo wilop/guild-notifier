@@ -39,8 +39,24 @@ GuildNotifier.battle_events = {
 
 GuildNotifier.common_events = {
     ["GUILD_MEMBER_ADDED"] = true,
+    ["GUILD_MEMBER_REMOVED"] = true,
     ["ZOOM"] = true,
     ["IDLE"] = true,
+}
+
+GuildNotifier.guild_removed_reasons = {
+    [0] = "Log off",
+    [1] = "Resign",
+    [2] = "Kicked out!",
+    [3] = "Voted our!",
+}
+
+GuildNotifier.guild_ranks = {
+    [0] = "Member",
+    [1] = "Lieutenant",
+    [2] = "Council member",
+    [3] = "Council member & Lieutenant",
+    [4] = "Commander",
 }
 
 GuildNotifier.sounds = {
@@ -48,6 +64,7 @@ GuildNotifier.sounds = {
     ["CHAT_MSG_GROUP"] = sounds.."group.wav",
     ["CHAT_MSG_GUILD"] = sounds.."guild.wav",
     ["GUILD_MEMBER_ADDED"] = sounds.."guild.wav",
+    ["GUILD_MEMBER_REMOVED"] = sounds.."guild.wav",
     ["HELP"] = sounds.."help.wav",
     ["TARGET"] = sounds.."target.wav", -- TODO: Cambiar sí se genera un error.
     ["ZOOM"] = sounds.."zoom.wav",
@@ -63,6 +80,7 @@ GuildNotifier.icons = {
     ["CHAT_MSG_GROUP"] = icons.."msg_group.png",
     ["CHAT_MSG_GUILD"] = icons.."msg_guild.png",
     ["GUILD_MEMBER_ADDED"] = GUILD_ICON,
+    ["GUILD_MEMBER_REMOVED"] = GUILD_ICON,
     ["HELP"] = icons.."help.png",
     ["TARGET"] = icons.."target.png",
     ["IDLE"] = PROFILE_ICON,
