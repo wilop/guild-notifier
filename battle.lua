@@ -150,7 +150,7 @@ function GuildNotifier.is_my_partner(name)
 
     local my_name, _, my_guildtag = GuildNotifier.get_player_info() --name, health, guildtag, faction, ship, distance
     local partner_name, _, partner_guildtad = GuildNotifier.get_player_info(partner_name)
---     if my_name == partner_name then return false end -- TODO: Comment this line for testing purpose.
+    if my_name == partner_name then return false end -- TODO: Comment this line for testing purpose.
     if my_guildtag == partner_guildtad then return true end
 
     return false

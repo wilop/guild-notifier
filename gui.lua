@@ -246,10 +246,19 @@ function GuildNotifier:init()
     if not GuildNotifier.gn_enable then return end
     if self:create_gui() then
         self:show()
-        console_print("GN: Starting...")
+        console_print("🟢 GN: Starting...")
     else
         self:hide()
     end
+end
+
+-- Return true when the gui id added in the HUD and ready for notifications
+function GuildNotifier:is_gui_ready()
+   if iup.GetParent(self.gui) == nil then
+        console_print("⛔ GN: gui is not ready yet!")
+        return false
+    end
+    return true
 end
 
 GuildNotifier:init()

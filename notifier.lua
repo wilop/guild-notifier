@@ -77,6 +77,7 @@ end
 -- Pushes the notification into the message queue.
 function GuildNotifier.push_notification(title, subtitle, msg, icon)
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
+    if not GuildNotifier:is_gui_ready() then return end
 
     if #notify_queue >= MAX_QUEUE then
         table.remove(notify_queue, 1)
