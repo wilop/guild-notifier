@@ -252,13 +252,13 @@ function GuildNotifier:init()
     end
 end
 
--- Return true when the gui id added in the HUD and ready for notifications
+-- Return true when the gui is added in the HUD and ready for notifications
 function GuildNotifier:is_gui_ready()
-   if iup.GetParent(self.gui) == nil then
-        console_print("⛔ GN: gui is not ready yet!")
-        return false
+    if xpcall(iup.GetParent, debug.traceback, self.gui) then
+        return true
     end
-    return true
+    console_print("⛔ GN: gui is not ready yet!")
+    return false
 end
 
 GuildNotifier:init()
