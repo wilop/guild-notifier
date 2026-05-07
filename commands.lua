@@ -53,10 +53,11 @@ end
 -- Disable the Guild Notifier and hide the gui.
 function GuildNotifier.off()
     GuildNotifier.gn_enable = false
-    if GuildNotifier:fade(50, "HIDDEN") then
+--     if GuildNotifier:fade(50, "HIDDEN") then
+        GuildNotifier:destroy_gui()
         GuildNotifier.set_volume("0")
         print("Guild Notifier: OFF")
-    end
+--     end
 end
 
 -- Toggle battele mode.
