@@ -36,17 +36,24 @@ RegisterEvent(GuildNotifier.guild_member_removed, "GUILD_MEMBER_REMOVED");
 -- Receives messages from chat events
 GuildNotifier.chat_receiver = chatreceiver.OnEvent
 function chatreceiver:OnEvent(e, data)
-    if not GuildNotifier.gn_enable then return end
-    if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
-        if data ~= nil and data.name ~= GetPlayerName() then
-            local name = data.name or ""
-            local charid = GetCharacterIDByName(name) or ""
-            local guildtag = data.guildtag or GetGuildTag(charid) or ""
-            local msg = data.msg or ""
-            local icon = e
-            GuildNotifier.push_notification(name, guildtag, msg, icon) -- Arguments: title, subtitle, msg, icon
+    if GuildNotifier.gn_enable then
+        if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
+            if data ~= nil and data.name ~= GetPlayerName() then
+--                 for k,v in pairs(data) do
+--                     print(k)
+--                     print(v)
+--                 end
+                local name = data.name or ""
+                local charid = GetCharacterIDByName(name) or -1
+                local guildtag = data.guildtag or GetGuildTag(charid) or ""
+                local msg = data.msg or ""
+                local icon = e
+                if charid == 1 then
+                    console_print("🔴 push_notification xpcall: ".. tostring(xpcall(GuildNotifier.push_notification, debug.traceback, name, guildtag, msg, icon)))
+                end
+            end
+        console_print("🔴 play_sound xpcall: ".. tostring(xpcall(GuildNotifier.play_sound, debug.traceback, e)))
         end
-    GuildNotifier.play_sound(e)
     end
     GuildNotifier.chat_receiver(self, e, data)
 end
@@ -84,9 +91,9 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
     end
 
     table.insert(notify_queue, {
-        title = title or "",
-        subtitle = subtitle or "",
-        msg = msg or "",
+        title = tostring(title) or "",
+        subtitle = tostring(subtitle) or "",
+        msg = tostring(msg) or "",
         icon = icon,
     })
 
