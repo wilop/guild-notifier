@@ -14,6 +14,8 @@ function GuildNotifier.cmd(_,args)
         GuildNotifier.print_info()
     elseif cmd == "battle" then
         GuildNotifier.battle_mode()
+    elseif cmd == "channel" then
+        GuildNotifier.set_channel(args[2])
     elseif cmd == "sound" then
         GuildNotifier.sound_mode()
     elseif cmd == "vol" then
@@ -73,6 +75,17 @@ function GuildNotifier.battle_mode()
 --         print("Guild Notifier: Battle mode "..bstate)
 --         print("Only displays <<HELP>> and <<TARGETS>> notifcations!")
 --     end
+end
+
+---Set the chat channel for the battle mode.
+---Avoid Vendetta Online designated channels.
+---Check list here: https://www.vendetta-online.com/x/msgboard/1/13762
+---@param channel string the channel to set.
+function GuildNotifier.set_channel(channel)
+	local resul, channel_ = GuildNotifier.set_battle_channel(channel)
+    local state = resul and "Changed!" or "Current"
+    local msg = string.format("%s\nUsage: /gn channel default | guild | #\nExample: /gn channel 2097", channel_)
+    GuildNotifier.push_notification("Battle mode channel", state, msg,"IDLE")
 end
 
 -- Toggle sound mode.

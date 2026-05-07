@@ -9,6 +9,7 @@ GuildNotifier.volume = VOLUME * 0.2 or 0.6
 GuildNotifier.mode_battle = false
 GuildNotifier.mode_sound = false
 GuildNotifier.state = 0
+GuildNotifier.battle_channel = "2097"
 
 GuildNotifier.states = {
     ["HIDDEN"] = -1,
@@ -30,6 +31,11 @@ GuildNotifier.chat_events = {
     ["CHAT_MSG_PRIVATE"] = true,
     ["CHAT_MSG_GROUP"] = true,
     ["CHAT_MSG_GUILD"] = true,
+}
+
+GuildNotifier.battle_chat_events = {
+    ["CHAT_MSG_CHANNEL_EMOTE"] = true,
+    ["CHAT_MSG_GUILD_EMOTE"] = true,
 }
 
 GuildNotifier.battle_events = {

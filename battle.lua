@@ -5,11 +5,12 @@
 GuildNotifier.battle_receiver = {}
 function GuildNotifier.battle_receiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
-    if e ~= "CHAT_MSG_CHANNEL_EMOTE" or data == nil then return end
-    if data.channelid ~= 2097 then
+    if GuildNotifier.battle_chat_events[e] or data == nil then return end
+    if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then
         return
     end
-    if not GuildNotifier.is_my_partner(data.name) then return end
+    if GetPlayerName() == data.name then return end
+   -- if not GuildNotifier.is_my_partner(data.name) then return end
 
     local msg = data.msg:upper()
 
@@ -30,13 +31,16 @@ function GuildNotifier.battle_receiver:OnEvent(e, data)
     end
 end
 RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_CHANNEL_EMOTE");
+RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_GUILD_EMOTE");
 
 -- Send a TARGET to a partner
 function GuildNotifier.send_target()
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
-    local channel = 2097
-    local active_channel = GetActiveChatChannel()
+
     local name, health, dist, factionid, guild, ship = GetTargetInfo()
+    if name == nil then return end
+
+    local channel = GuildNotifier.battle_channel
     local sectorid = GetCurrentSectorid() or -1
     local faction = ""
 
@@ -52,13 +56,7 @@ function GuildNotifier.send_target()
     local msg = string.format(format_send, name, health, dist, faction, guild, ship, sectorid)
     console_print("Un target antes de enviarlo")
     console_print(msg)
-
-    if name == nil then return end
-    JoinChannel(channel)
-    Timer():SetTimeout(50, function ()
-        SendChat("/me "..msg, "CHANNEL", channel)
-    end)
-    JoinChannel(active_channel)
+    GuildNotifier.send_battle_messages(channel, msg)
 end
 
 -- Displays TARGET info shared by a partner
@@ -106,17 +104,10 @@ function GuildNotifier.help_seeker:OnEvent(e , data)
     if health == nil or health > 50 then return end
 
     local sectorid = GetCurrentSectorid() or -1
-    local channel = 2097
-    local active_channel = GetActiveChatChannel()
-    JoinChannel(channel)
-
+    local channel = GuildNotifier.battle_channel
     local msg = string.format("HELP:%d", sectorid)
 
---     SendChat("/me "..msg, "CHANNEL", channel)
-    Timer():SetTimeout(50, function ()
-        SendChat("/me "..msg, "CHANNEL", channel)
-    end)
-    JoinChannel(active_channel)
+    GuildNotifier.send_battle_messages(channel, msg)
 end
 
 RegisterEvent(GuildNotifier.help_seeker, "PLAYER_GOT_HIT");
@@ -139,7 +130,7 @@ function GuildNotifier.helper:OnEvent(e, data)
     GuildNotifier.play_sound(e)
 end
 RegisterEvent(GuildNotifier.helper, "HELP");
-
+--[[
 -- Return true if a player is in our same group or guild
 function GuildNotifier.is_my_partner(name)
     local partner_name = name
@@ -154,6 +145,41 @@ function GuildNotifier.is_my_partner(name)
     if my_guildtag == partner_guildtad then return true end
 
     return false
+end]]
+
+---Send messages for battle events
+---@param channel string
+---@param msg string
+function GuildNotifier.send_battle_messages(channel, msg)
+    if tostring(channel) == "GUILD" then
+        Timer():SetTimeout(50, function ()
+            SendChat("/me "..msg, "GUILD")
+        end)
+    else
+        local active_channel = GetActiveChatChannel()
+        local channel_ = tonumber(channel)
+        JoinChannel(channel_)
+        Timer():SetTimeout(50, function ()
+            SendChat("/me "..msg, "CHANNEL", channel_)
+        end)
+        JoinChannel(active_channel)
+    end
+end
+
+---Sets the battle chat channel.
+---@param channel string
+---@return boolean
+---@return string channel
+function GuildNotifier.set_battle_channel(channel)
+    local channel_ = GuildNotifier.battle_channel
+    if channel == "default" then channel_ = "2097"
+    elseif channel == "guild" then channel_ = "GUILD"
+    elseif tonumber(channel) then channel_ = tostring(channel)
+    else
+        return false, channel_
+    end
+    GuildNotifier.battle_channel = channel_
+    return true, channel_
 end
 
 -- END of BATTLE MODE
