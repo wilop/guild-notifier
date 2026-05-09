@@ -5,7 +5,7 @@
 GuildNotifier.battle_receiver = {}
 function GuildNotifier.battle_receiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
-    if GuildNotifier.battle_chat_events[e] or data == nil then return end
+    if not GuildNotifier.battle_chat_events[e] or data == nil then return end
     if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then
         return
     end

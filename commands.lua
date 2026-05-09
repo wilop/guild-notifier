@@ -55,6 +55,8 @@ end
 -- Disable the Guild Notifier and hide the gui.
 function GuildNotifier.off()
     GuildNotifier.gn_enable = false
+    GuildNotifier.mode_sound = false
+    GuildNotifier.mode_sound = false
     GuildNotifier:destroy_gui()
     GuildNotifier.set_volume("0")
     print("Guild Notifier: OFF")
@@ -62,7 +64,7 @@ end
 
 -- Toggle battele mode.
 function GuildNotifier.battle_mode()
-    GuildNotifier.gn_enable = true
+   if not GuildNotifier.gn_enable then GuildNotifier.on() end
     GuildNotifier.mode_battle = not GuildNotifier.mode_battle
     local bstate = GuildNotifier.mode_battle and "ON" or "OFF"
     GuildNotifier.push_notification("Battle mode", bstate, "Only displays <<HELP>> and <<TARGETS>> notifcations!","IDLE")
@@ -73,6 +75,7 @@ end
 ---Check list here: https://www.vendetta-online.com/x/msgboard/1/13762
 ---@param channel string the channel to set.
 function GuildNotifier.set_channel(channel)
+    if not GuildNotifier.gn_enable then GuildNotifier.on() end
 	local resul, channel_ = GuildNotifier.set_battle_channel(channel)
     local state = resul and "Changed!" or "Current"
     local msg = string.format("%s\nUsage: /gn channel default | guild | #\nExample: /gn channel 2097", channel_)
@@ -81,15 +84,15 @@ end
 
 -- Toggle sound mode.
 function GuildNotifier.sound_mode()
-    GuildNotifier.gn_enable = true
+    if not GuildNotifier.gn_enable then GuildNotifier.on() end
     GuildNotifier.mode_sound = not GuildNotifier.mode_sound
-    local bstate = GuildNotifier.mode_sound and "ON" or "OFF"
-    local state = GuildNotifier.mode_sound and "HIDDEN" or "IDLE"
-    if GuildNotifier:fade(50, state) then
+    local state = GuildNotifier.mode_sound and "ON" or "OFF"
+    local gui_state = GuildNotifier.mode_sound and "HIDDEN" or "IDLE"
+    if GuildNotifier:fade(50, gui_state) then
         GuildNotifier.mode_battle = false
         local vol = tostring(VOLUME) or "3"
         GuildNotifier.set_volume(vol)
-        print("Guild Notifier: Sound mode "..bstate)
+        print("Guild Notifier: Sound mode "..state)
         print("Just plays sounds!")
     end
 end
