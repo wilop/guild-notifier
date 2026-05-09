@@ -1,7 +1,5 @@
-local current_time = nil
 local notify_queue = {}
 local current = nil
-
 
 -- Switches the icon to the GUILD_ICON when a guild member joins or is added.
 GuildNotifier.guild_member_added = {}
@@ -60,15 +58,15 @@ end
 
 -- Gets info about a player for help or as target. Returns: name, health, guildtag, faction, ship, distance
 function GuildNotifier.get_player_info(name)
-    local name = name or GetPlayerName()
-    local charid = GetCharacterIDByName(name)
+    local name_ = name or GetPlayerName()
+    local charid = GetCharacterIDByName(name_)
     local health = GetPlayerHealth(charid)
     local guildtag = GetGuildTag(charid) or "-"
     local faction = FactionName[GetPlayerFaction(charid)] or "-"
     local ship = GetPrimaryShipNameOfPlayer(charid) or "-"
     local distance = GetRadarDistance(charid)
     distance = distance or -1
-    return name, health, guildtag, faction, ship, distance
+    return name_, health, guildtag, faction, ship, distance
 end
 
 -- Plays a notification sound
@@ -113,11 +111,6 @@ end
 -- Set and the next notification.
 function GuildNotifier.next_notification()
     current = table.remove(notify_queue, 1)
-    console_print("🔴 Current notification")
-    for k,v in pairs(current) do
-        console_print(k..":")
-        console_print(v)
-    end
     GuildNotifier:set_gui_data(current)
     GuildNotifier.update_notification()
 end

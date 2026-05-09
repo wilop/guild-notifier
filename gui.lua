@@ -32,7 +32,6 @@ function GuildNotifier:create_gui()
 
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return false end
     if GuildNotifier.state == GuildNotifier.states["IDLE"]  then
-       -- print("IDLE")
         self.gui = iup.hbox{
             iup.fill{size = x_margin},
             iup.vbox{
@@ -54,8 +53,6 @@ function GuildNotifier:create_gui()
         }
 
     elseif GuildNotifier.state == GuildNotifier.states["SHOWN"] then
-     --   print("SHOWN")
-
         x_margin = (x_size - 800 ) /2
 
         self.gui = iup.hbox{
@@ -89,8 +86,6 @@ function GuildNotifier:create_gui()
         }
 
     elseif GuildNotifier.state == GuildNotifier.states["BATTLE"] then
-       -- print("BATTLE")
-
         x_margin = (x_size - 650 ) /2
 
         self.gui = iup.hbox{
@@ -202,7 +197,6 @@ function GuildNotifier:fade(timeout, state)
         return true
     else
         local function animate(s)
-        --self:refresh()
         self:destroy_gui()
         self:init()
         end

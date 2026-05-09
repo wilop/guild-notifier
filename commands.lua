@@ -30,7 +30,7 @@ end
 -- Show commands options and usage.
 function GuildNotifier.print_help()
     print("Guild Notifier commands:")
-    print("/gn on | off | info | sound | battle | vol # (0-5) | test")
+    print("/gn on | off | info | sound | battle | channel | vol # (0-5) | test")
 end
 -- Show the plugin information.
 function GuildNotifier.print_info()
@@ -55,26 +55,17 @@ end
 -- Disable the Guild Notifier and hide the gui.
 function GuildNotifier.off()
     GuildNotifier.gn_enable = false
---     if GuildNotifier:fade(50, "HIDDEN") then
-        GuildNotifier:destroy_gui()
-        GuildNotifier.set_volume("0")
-        print("Guild Notifier: OFF")
---     end
+    GuildNotifier:destroy_gui()
+    GuildNotifier.set_volume("0")
+    print("Guild Notifier: OFF")
 end
 
 -- Toggle battele mode.
 function GuildNotifier.battle_mode()
---  print("Mode battle: Not yet!")
     GuildNotifier.gn_enable = true
     GuildNotifier.mode_battle = not GuildNotifier.mode_battle
     local bstate = GuildNotifier.mode_battle and "ON" or "OFF"
---     local state = GuildNotifier.mode_battle and "BATTLE" or "IDLE"
     GuildNotifier.push_notification("Battle mode", bstate, "Only displays <<HELP>> and <<TARGETS>> notifcations!","IDLE")
---     if GuildNotifier:fade(50, state) then
---         GuildNotifier.play_sound("ZOOM")
---         print("Guild Notifier: Battle mode "..bstate)
---         print("Only displays <<HELP>> and <<TARGETS>> notifcations!")
---     end
 end
 
 ---Set the chat channel for the battle mode.
@@ -90,7 +81,6 @@ end
 
 -- Toggle sound mode.
 function GuildNotifier.sound_mode()
---  print("Mode sound: Not yet!")
     GuildNotifier.gn_enable = true
     GuildNotifier.mode_sound = not GuildNotifier.mode_sound
     local bstate = GuildNotifier.mode_sound and "ON" or "OFF"

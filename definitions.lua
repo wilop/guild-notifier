@@ -66,13 +66,13 @@ GuildNotifier.guild_ranks = {
 }
 
 GuildNotifier.sounds = {
-    ["CHAT_MSG_PRIVATE"] = sounds.."private.wav", -- TODO: Cambiar sí se genera un error.
+    ["CHAT_MSG_PRIVATE"] = sounds.."private.wav",
     ["CHAT_MSG_GROUP"] = sounds.."group.wav",
     ["CHAT_MSG_GUILD"] = sounds.."guild.wav",
     ["GUILD_MEMBER_ADDED"] = sounds.."guild.wav",
     ["GUILD_MEMBER_REMOVED"] = sounds.."guild.wav",
     ["HELP"] = sounds.."help.wav",
-    ["TARGET"] = sounds.."target.wav", -- TODO: Cambiar sí se genera un error.
+    ["TARGET"] = sounds.."target.wav",
     ["ZOOM"] = sounds.."zoom.wav",
 }
 

@@ -10,7 +10,6 @@ function GuildNotifier.battle_receiver:OnEvent(e, data)
         return
     end
     if GetPlayerName() == data.name then return end
-   -- if not GuildNotifier.is_my_partner(data.name) then return end
 
     local msg = data.msg:upper()
 
@@ -44,7 +43,6 @@ function GuildNotifier.send_target()
     local sectorid = GetCurrentSectorid() or -1
     local faction = ""
 
-    -- name
     health = health and health *100 or -1
     dist = dist or -1
     factionid = factionid or -1
@@ -54,16 +52,12 @@ function GuildNotifier.send_target()
 
     local format_send = "target=%s|health=%d|distance=%d|faction=%s|guild=%s|ship=%s|sector=%d"
     local msg = string.format(format_send, name, health, dist, faction, guild, ship, sectorid)
-    console_print("Un target antes de enviarlo")
-    console_print(msg)
     GuildNotifier.send_battle_messages(channel, msg)
 end
 
 -- Displays TARGET info shared by a partner
 GuildNotifier.target = {}
 function GuildNotifier.target:OnEvent(e, data)
-    console_print("entrando a funcion target")
-    console_print(data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "TARGET" or data == nil then return end
 
@@ -76,18 +70,11 @@ function GuildNotifier.target:OnEvent(e, data)
     if charid ~= nil then
         target.distance = GetRadarDistance(charid) or -1
     end
---     local format_print = "\n\tTarget:%s\n\tHealth:%d\n\tDistance:%d\n\tFaction:%s\n\tGuild:%s\n\tShip:%s"
---     print(string.format(format_print,
---     target.target, target.health, target.distance, target.faction, target.guild, target.ship))
 
-    local icon = e
     local format_notification = "%s\n<> Health: %d \t%s\t    Dist: %d m <>\n%s"
-    local sector =ShortLocationStr(target.sector) or "-"
+    local sector = ShortLocationStr(target.sector) or "-"
     local msg = string.format(format_notification, target.ship, target.health, sector, target.distance, target.faction)
 
-    console_print(e)
-    console_print(GuildNotifier.icons[e])
-    console_print("o fue aqui")
     GuildNotifier:set_icon(e)
     GuildNotifier.push_notification(target.target, target.guild, msg, e) -- Arguments: title, subtitle, msg, icon
     GuildNotifier.play_sound(e)
@@ -117,9 +104,8 @@ GuildNotifier.helper = {}
 function GuildNotifier.helper:OnEvent(e, data)
     if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
     if e ~= "HELP" and data == nil then return end
-    local name, health, guildtag, faction, ship, distance = GuildNotifier.get_player_info(data.name) --Returns: name, health, guildtag, faction, ship, distance
+    local name, health, guildtag, faction, ship, distance = GuildNotifier.get_player_info(data.name)
     local sectorid = string.match(data.msg, ":(%d+)") or -1
---     print("sector:"..tostring(sectorid))
     local sector = ShortLocationStr(sectorid) or "-"
 
     local format_notification = "%s\n<> Health: %d \t%s\t    Dist: %d m <>\n%s"
@@ -130,22 +116,6 @@ function GuildNotifier.helper:OnEvent(e, data)
     GuildNotifier.play_sound(e)
 end
 RegisterEvent(GuildNotifier.helper, "HELP");
---[[
--- Return true if a player is in our same group or guild
-function GuildNotifier.is_my_partner(name)
-    local partner_name = name
-
-    ForEachBuddy(function (buddy_name)
-    if partner_name == buddy_name then return true end
-    end)
-
-    local my_name, _, my_guildtag = GuildNotifier.get_player_info() --name, health, guildtag, faction, ship, distance
-    local partner_name, _, partner_guildtad = GuildNotifier.get_player_info(partner_name)
-    if my_name == partner_name then return false end -- TODO: Comment this line for testing purpose.
-    if my_guildtag == partner_guildtad then return true end
-
-    return false
-end]]
 
 ---Send messages for battle events
 ---@param channel string

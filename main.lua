@@ -24,4 +24,3 @@ if GN_ENABLE then
     dofile("commands.lua")
 end
 
--- /lua ReloadInterface()
