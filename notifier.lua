@@ -37,16 +37,12 @@ function chatreceiver:OnEvent(e, data)
     if GuildNotifier.gn_enable then
         if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
             if data ~= nil and data.name ~= GetPlayerName() then
---                 for k,v in pairs(data) do
---                     print(k)
---                     print(v)
---                 end
                 local name = data.name or ""
                 local charid = GetCharacterIDByName(name) or -1
                 local guildtag = data.guildtag or GetGuildTag(charid) or ""
                 local msg = data.msg or ""
                 local icon = e
-                if charid == 1 then
+                if charid ~= -1 then
                     console_print("🔴 push_notification xpcall: ".. tostring(xpcall(GuildNotifier.push_notification, debug.traceback, name, guildtag, msg, icon)))
                 end
             end
@@ -71,6 +67,7 @@ end
 
 -- Plays a notification sound
 function GuildNotifier.play_sound(sound)
+    if not GuildNotifier.gn_enable then return end
     if GuildNotifier.volume == 0 then
         return
     else
@@ -81,6 +78,7 @@ end
 
 -- Pushes the notification into the message queue.
 function GuildNotifier.push_notification(title, subtitle, msg, icon)
+    if not GuildNotifier.gn_enable then return end
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
     if not GuildNotifier:is_gui_ready() then return end
 
