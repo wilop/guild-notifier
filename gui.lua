@@ -1,3 +1,4 @@
+---@class gui
 GuildNotifier.gui = iup.hbox {}
 GuildNotifier.gui_data = {
     wing_left = GuildNotifier.wings["SHOWN"].left,
@@ -10,7 +11,7 @@ GuildNotifier.gui_data = {
     msg = "Thanks for using Guild Notifier.\nHave a great journey!."
 }
 
--- Create the gui to be displayed in HUD.
+---Create the gui to be displayed in HUD.
 function GuildNotifier:create_gui()
     console_print("🔴 Begin of create_gui")
     local x_size =gkinterface.GetXResolution()
@@ -119,7 +120,8 @@ function GuildNotifier:create_gui()
     return true
 end
 
--- Set the gui data to be displayed.
+---Set the gui data to be displayed.
+---@param data table
 function GuildNotifier:set_gui_data(data)
 
     if not self.title or not self.gui then
@@ -140,14 +142,16 @@ function GuildNotifier:set_gui_data(data)
     console_print("🔴 End of set_gui_data")
 end
 
--- Set the icon to be displayed.
+---Set the icon to be displayed.
+---@param icon string The icon name associated to an event.
 function GuildNotifier:set_icon(icon)
     self.gui_data.icon = GuildNotifier.icons[icon] or ""
     self.gui_icon_left.image = self.gui_data.icon
     self.gui_icon_right.image = self.gui_data.icon
 end
 
--- Set the wings to be displayed.
+---Set the wings to be displayed.
+---@param wing string The wing associated to mode.
 function GuildNotifier:set_wings(wing)
 	self.gui_data.wing_left = GuildNotifier.wings[wing].left or ""
 	self.gui_data.wing_right = GuildNotifier.wings[wing].right or ""
@@ -155,7 +159,9 @@ function GuildNotifier:set_wings(wing)
 	self.wing_right.image = self.gui_data.wing_right
 end
 
--- Animate the icons with a blinking effect.
+---Animate the icons with a blinking effect.
+---@param timeout integer The duration time of each blink in milliseconds.
+---@param times integer The number of repetitions.
 function GuildNotifier:icon_blinker(timeout, times)
     if not self.gui_icon_left or not self.gui_icon_right then
         return
@@ -184,11 +190,14 @@ function GuildNotifier:icon_blinker(timeout, times)
     blink(times)
 end
 
--- Make a transition between the gui states.
+---Make a transition between the gui states.
+---@param timeout integer The time duration in milliseconds.
+---@param state string A gui state to be set.
+---@return boolean
 function GuildNotifier:fade(timeout, state)
     console_print("🔴 Begin of fade")
     if not GuildNotifier.states[state] then return false end
-    if GuildNotifier.states[state] == GuildNotifier.state then return end
+    if GuildNotifier.states[state] == GuildNotifier.state then return false end
 
     GuildNotifier.state = GuildNotifier.states[state]
 
@@ -201,20 +210,21 @@ function GuildNotifier:fade(timeout, state)
         self:init()
         end
 
-        console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1)))
+        if not console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1))) then return false end
 
     end
     console_print("🔴 End of fade")
     return true
 end
--- Refresh the gui.
+
+---Refresh the gui.
 function GuildNotifier:refresh()
     if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state then
         iup.Refresh(self.gui)
     end
 end
 
--- Append the gui in the HUD.
+---Append the gui in the HUD.
 function GuildNotifier:show()
     if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state then
         iup.Append(HUD.pluginlayer, self.gui)
@@ -222,7 +232,7 @@ function GuildNotifier:show()
     end
 end
 
--- Hide the gui.
+---Hide the gui.
 function GuildNotifier:hide()
     iup.Detach(self.gui)
 end
@@ -235,7 +245,7 @@ function GuildNotifier:destroy_gui()
     end
 end
 
--- Create and show the gui.
+---Create and show the gui.
 function GuildNotifier:init()
     if not GuildNotifier.gn_enable then return end
     if self:create_gui() then
@@ -246,7 +256,8 @@ function GuildNotifier:init()
     end
 end
 
--- Return true when the gui is added in the HUD and ready for notifications
+---Verify if the  gui is added in the HUD and ready for notifications.
+---@return boolean
 function GuildNotifier:is_gui_ready()
     if xpcall(iup.GetParent, debug.traceback, self.gui) then
         return true
@@ -257,10 +268,13 @@ end
 
 GuildNotifier:init()
 
--- Event handlers
+---@section EVENT_HANDLERS
+---Starts the Guild Notifier gui.
+---@param e string The event (ignored).
+---@param data table The data for this event (ignored).
 function GuildNotifier:rHUDxscale(e, data)
     self:init()
 end
 
 RegisterEvent(GuildNotifier, 'rHUDxscale')
-
+---@end

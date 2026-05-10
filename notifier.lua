@@ -1,8 +1,12 @@
 local notify_queue = {}
 local current = nil
 
--- Switches the icon to the GUILD_ICON when a guild member joins or is added.
+---@class guild_member_added
 GuildNotifier.guild_member_added = {}
+---Send a notification when a guild member joins or is added.
+---@param e string The event.
+---@param charid integer The character ID.
+---@param rank integer The rank of a guild member.
 function GuildNotifier.guild_member_added:OnEvent(e, charid, rank)
     if e ~= "GUILD_MEMBER_ADDED" then return end
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
@@ -16,8 +20,9 @@ function GuildNotifier.guild_member_added:OnEvent(e, charid, rank)
 end
 RegisterEvent(GuildNotifier.guild_member_added, "GUILD_MEMBER_ADDED");
 
--- Switches the icon to the GUILD_ICON when a guild member joins or is added.
+---@class guild_member_removed
 GuildNotifier.guild_member_removed = {}
+---Send a notification when a guild member joins or is removed.
 function GuildNotifier.guild_member_removed:OnEvent(e, charid, reason)
     if e ~= "GUILD_MEMBER_REMOVED" then return end
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
@@ -31,8 +36,9 @@ function GuildNotifier.guild_member_removed:OnEvent(e, charid, reason)
 end
 RegisterEvent(GuildNotifier.guild_member_removed, "GUILD_MEMBER_REMOVED");
 
--- Receives messages from chat events
+---@type func(ihandler: class, event: string, data: table)
 GuildNotifier.chat_receiver = chatreceiver.OnEvent
+---Receives messages from chat events
 function chatreceiver:OnEvent(e, data)
     if GuildNotifier.gn_enable then
         if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
@@ -52,7 +58,14 @@ function chatreceiver:OnEvent(e, data)
     GuildNotifier.chat_receiver(self, e, data)
 end
 
--- Gets info about a player for help or as target. Returns: name, health, guildtag, faction, ship, distance
+---Gets info about a player for help or as target.
+---@param name string A player name.
+---@return string name The player name.
+---@return integer health The player health.
+---@return string guildtag The guildtag of the player or "-" if player is not in a guild.
+---@return string faction  The faction name of the player.
+---@return string ship The players' primary ship.
+---@return integer distance The randar distance in meters or -1 if player is out of radar.
 function GuildNotifier.get_player_info(name)
     local name_ = name or GetPlayerName()
     local charid = GetCharacterIDByName(name_)
@@ -65,7 +78,8 @@ function GuildNotifier.get_player_info(name)
     return name_, health, guildtag, faction, ship, distance
 end
 
--- Plays a notification sound
+---Plays a notification sound effect.
+---@param sound string The sound name associated to an event.
 function GuildNotifier.play_sound(sound)
     if not GuildNotifier.gn_enable then return end
     if GuildNotifier.volume == 0 then
@@ -76,7 +90,12 @@ function GuildNotifier.play_sound(sound)
     end
 end
 
--- Pushes the notification into the message queue.
+---Pushes the notification into the message queue.
+---Sets the wings, switches the gui to a new state and plays its sound effect.
+---@param title string The title of the notification.
+---@param subtitle string A subtitle.
+---@param msg string The message body.
+---@param icon string The icon name associated to an event.
 function GuildNotifier.push_notification(title, subtitle, msg, icon)
     if not GuildNotifier.gn_enable then return end
     if GuildNotifier.state == GuildNotifier.states["HIDDEN"] then return end
@@ -106,14 +125,15 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
     end
 end
 
--- Set and the next notification.
+---Sets the next notification, sets the gui data and calls update_notification().
 function GuildNotifier.next_notification()
     current = table.remove(notify_queue, 1)
     GuildNotifier:set_gui_data(current)
     GuildNotifier.update_notification()
 end
 
--- Update to the next notification or switch to "IDLE" state.
+---Update to the next notification.
+---Calls next_notification() or switches the gui to "IDLE" and its sound effect.
 function GuildNotifier.update_notification()
     if not current then
         return

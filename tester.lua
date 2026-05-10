@@ -1,4 +1,5 @@
--- Trigger the events and test the notifications
+---Trigger the events and test the notifications
+---@param data table Data with a test name and a message.
 function GuildNotifier.tester(data)
     if not GuildNotifier.gn_enable then return end
     if data == nil then return end

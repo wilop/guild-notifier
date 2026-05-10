@@ -15,20 +15,22 @@ Created by _Otesten Vanar_, a member of [__U.S.D.S.__](https://www.vendetta-onli
 - Provides an AUTOLOGIN function.
 
 ## Download, install and support.
-To install the plugin follow the instructions [Vendetta Wiki](https://www.vo-wiki.com/wiki/Plug-ins). 
+To install the plugin follow the instructions in [Vendetta Wiki](https://www.vo-wiki.com/wiki/Plug-ins). 
 To download, share comments, ideas or ask for help follow the [links](#Links) at the bottom of this document. 
 
 ## Usage:
-| Command       |                                                    |
-|---------------|----------------------------------------------------|
-| /gn           | Show options                                       |
-| /gn on        | Turn on Guild Notifier                             |
-| /gn off       | Turn off Guild Notifier                            |
-| /gn info      | Show info about this plugin                        |
-| /gn sound     | Toggle sound mode (just plays a sound)             |
-| /gn battle    | Toggle battle mode (HELP and TARGET notifications) |
-| /gn vol       | Adjust or mute the volume                          |
-| /gn test      | Send test notifications                            |
+| Command       |                                                                |
+|---------------|----------------------------------------------------------------|
+| /gn           | Show options.                                                  |
+| /gn on        | Turn on Guild Notifier.                                        |
+| /gn off       | Turn off Guild Notifier.                                       |
+| /gn info      | Show info about this plugin.                                   |
+| /gn sound     | Toggle (on - off) sound mode (just plays sounds).              |
+| /gn battle    | Toggle (on - off) battle mode (HELP and TARGET notifications). |
+| /gn channel   | Set the chat channel for battle mode.                          |
+| /gn extra     | Toggle (on - off) extra notifications to normal mode.          |
+| /gn vol       | Adjust or mute the volume.                                     |
+| /gn test      | Send test notifications.                                       |
 
 ## Battle mode and  sound mode.
 In battle mode you will only see `HELP` and `TARGET` notifications. a "HELP" message will be sent automatically when you got hit and your health is lower than 50%. A message with "target's" info will be sent when you press key "0" or when you use `gn_target` command.  
@@ -50,7 +52,8 @@ ___GuildNotifier___  works only on the client side. The plugin does not share an
 > _Otesten Vanar_ ([wilop](https://github.com/wilop))
 
 ## Credits:
-> _Commander Azryayix Gyarz_: 
+> _Commander Azryayix Gyarz_:  
+- Testing.  
 - Original guild icon.  
  ![GUILD ICON](./assets/guild0.png)
  

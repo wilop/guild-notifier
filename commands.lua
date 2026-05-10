@@ -1,5 +1,7 @@
--- Manage GuildNotifier user commands.
-function GuildNotifier.cmd(_,args)
+---Manage the user commands
+---@param _ any?
+---@param args string[]
+function GuildNotifier.cmd(_, args)
     if type(args) ~= "table" or not args[1] then
         GuildNotifier.print_help()
         return
@@ -28,13 +30,15 @@ function GuildNotifier.cmd(_,args)
         GuildNotifier.print_help()
     end
 end
+---@end
 
--- Show commands options and usage.
+---Show commands options and usage.
 function GuildNotifier.print_help()
     print("Guild Notifier commands:")
     print("/gn on | off | info | sound | battle | channel | extra |vol # (0-5) | test")
 end
--- Show the plugin information.
+
+---Show the plugin information.
 function GuildNotifier.print_info()
     print("Guild Notifier:")
     print(tostring(GuildNotifier.info.description))
@@ -43,7 +47,7 @@ function GuildNotifier.print_info()
     print("Version: " .. tostring(GuildNotifier.info.version))
 end
 
--- Enable the Guild Notifier and show the gui.
+---Enable the Guild Notifier and turn it on.
 function GuildNotifier.on()
     GuildNotifier.gn_enable = true
     GuildNotifier.state = GuildNotifier.states["HIDDEN"]
@@ -54,7 +58,7 @@ function GuildNotifier.on()
     end
 end
 
--- Disable the Guild Notifier and hide the gui.
+---Disable the Guild Notifier and turn it off, reset all states.
 function GuildNotifier.off()
     GuildNotifier.gn_enable = false
     GuildNotifier.mode_sound = false
@@ -65,7 +69,8 @@ function GuildNotifier.off()
     print("Guild Notifier: OFF")
 end
 
--- Toggle battele mode.
+---Toggle (on | off) battle mode.
+---Battle mode displays HELP, TARGET and Guild's activity notifications.
 function GuildNotifier.battle_mode()
    if not GuildNotifier.gn_enable then GuildNotifier.on() end
     GuildNotifier.mode_battle = not GuildNotifier.mode_battle
@@ -85,7 +90,8 @@ function GuildNotifier.set_channel(channel)
     GuildNotifier.push_notification("Battle mode channel", state, msg,"IDLE")
 end
 
--- Toggle sound mode.
+---Toggle (on | off) sound mode.
+---Just plays sounds notifications and hides the gui.
 function GuildNotifier.sound_mode()
     if not GuildNotifier.gn_enable then GuildNotifier.on() end
     GuildNotifier.mode_sound = not GuildNotifier.mode_sound
@@ -109,7 +115,8 @@ function GuildNotifier.extra()
     GuildNotifier.push_notification("Extra notifications", state, msg,"IDLE")
 end
 
--- Run different tests.
+---Run different tests.
+---@param t string a key of the test ().
 function GuildNotifier.test(t)
     if not GuildNotifier.gn_enable then
         print("Guild Notifier: OFF")
@@ -126,12 +133,13 @@ function GuildNotifier.test(t)
     end
 end
 
--- Call the send_target function.
+---Call the send_target function.
 function GuildNotifier.cmd_send_target()
     GuildNotifier.send_target()
 end
 
--- Adjust or mute the volumen of the sounds effects.
+---Adjust or mute the volumen of the sounds effects.
+---@param v string The volumen level (its a number)
 function GuildNotifier.set_volume(v)
     if GuildNotifier.volume_levels[v] then
         GuildNotifier.volume = GuildNotifier.volume_levels[v]
@@ -143,7 +151,8 @@ function GuildNotifier.set_volume(v)
     end
 end
 
--- Register and bind user commands.
+---@section Register and bind user commands.
 RegisterUserCommand("gn", GuildNotifier.cmd)
 RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)
 gkinterface.BindCommand(gkinterface.GetInputCodeByName("0"), "gn_target")
+---@end

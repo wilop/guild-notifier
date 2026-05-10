@@ -1,8 +1,10 @@
--- BATTLE MODE
+---BATTLE MODE
 
---CHAT_MSG_CHANNEL_EMOTE
---Arguments: data = {string name, string msg, int faction = factionid, int channelid}
+---@class battle_receiver
 GuildNotifier.battle_receiver = {}
+---Manage the battle chat events.
+---@param e string The battle chat event.
+---@param data table The data for this event.
 function GuildNotifier.battle_receiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
     if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
@@ -10,7 +12,7 @@ function GuildNotifier.battle_receiver:OnEvent(e, data)
     if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then
         return
     end
---     if GetPlayerName() == data.name then return end
+    if GetPlayerName() == data.name then return end
 
     local msg = data.msg:upper()
 
@@ -33,7 +35,7 @@ end
 RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_CHANNEL_EMOTE");
 RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_GUILD_EMOTE");
 
--- Send a TARGET to a partner
+---Send a TARGET to a partner.
 function GuildNotifier.send_target()
     if not GuildNotifier.gn_enable then return end
     if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
@@ -57,8 +59,11 @@ function GuildNotifier.send_target()
     GuildNotifier.send_battle_messages(channel, msg)
 end
 
--- Displays TARGET info shared by a partner
+---@class target
 GuildNotifier.target = {}
+---Displays TARGET info shared by a partner.
+---@param e string The TARGET event.
+---@param data table The data with the TARGET information.
 function GuildNotifier.target:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
     if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
@@ -84,8 +89,11 @@ function GuildNotifier.target:OnEvent(e, data)
 end
 RegisterEvent(GuildNotifier.target, "TARGET");
 
--- Send a HELP message when your health is less than 50%
+---@class help_seeker
 GuildNotifier.help_seeker = {}
+---Send a HELP message when your health is less than 50%.
+---@param e string The event.
+---@param data table The data for this event (not used).
 function GuildNotifier.help_seeker:OnEvent(e , data)
     if not GuildNotifier.gn_enable then return end
     if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
@@ -100,11 +108,13 @@ function GuildNotifier.help_seeker:OnEvent(e , data)
 
     GuildNotifier.send_battle_messages(channel, msg)
 end
-
 RegisterEvent(GuildNotifier.help_seeker, "PLAYER_GOT_HIT");
 
--- Displays a notification asking for your health
+---@class helper
 GuildNotifier.helper = {}
+---Displays a notification asking for your health.
+---@param e string The event.
+---@param data table The data for this event.
 function GuildNotifier.helper:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
     if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
@@ -123,8 +133,8 @@ end
 RegisterEvent(GuildNotifier.helper, "HELP");
 
 ---Send messages for battle events
----@param channel string
----@param msg string
+---@param channel string The channel to send messages.
+---@param msg string The message.
 function GuildNotifier.send_battle_messages(channel, msg)
     if tostring(channel) == "GUILD" then
         Timer():SetTimeout(50, function ()
@@ -142,9 +152,9 @@ function GuildNotifier.send_battle_messages(channel, msg)
 end
 
 ---Sets the battle chat channel.
----@param channel string
+---@param channel string The channel to be set.
 ---@return boolean
----@return string channel
+---@return string channel The new, current or ignored channel.
 function GuildNotifier.set_battle_channel(channel)
     local channel_ = GuildNotifier.battle_channel
     if channel == "default" then channel_ = "2097"
@@ -157,4 +167,4 @@ function GuildNotifier.set_battle_channel(channel)
     return true, channel_
 end
 
--- END of BATTLE MODE
+---END of BATTLE MODE
