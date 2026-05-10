@@ -10,6 +10,7 @@ GuildNotifier.mode_battle = false
 GuildNotifier.mode_sound = false
 GuildNotifier.state = 0
 GuildNotifier.battle_channel = "2097"
+GuildNotifier.extra_notifications = false
 
 GuildNotifier.states = {
     ["HIDDEN"] = -1,

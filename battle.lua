@@ -4,12 +4,13 @@
 --Arguments: data = {string name, string msg, int faction = factionid, int channelid}
 GuildNotifier.battle_receiver = {}
 function GuildNotifier.battle_receiver:OnEvent(e, data)
-    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable then return end
+    if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
     if not GuildNotifier.battle_chat_events[e] or data == nil then return end
     if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then
         return
     end
-    if GetPlayerName() == data.name then return end
+--     if GetPlayerName() == data.name then return end
 
     local msg = data.msg:upper()
 
@@ -34,7 +35,8 @@ RegisterEvent(GuildNotifier.battle_receiver, "CHAT_MSG_GUILD_EMOTE");
 
 -- Send a TARGET to a partner
 function GuildNotifier.send_target()
-    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable then return end
+    if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
 
     local name, health, dist, factionid, guild, ship = GetTargetInfo()
     if name == nil then return end
@@ -58,7 +60,8 @@ end
 -- Displays TARGET info shared by a partner
 GuildNotifier.target = {}
 function GuildNotifier.target:OnEvent(e, data)
-    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable then return end
+    if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
     if e ~= "TARGET" or data == nil then return end
 
     local target = {target = "-", health = -1, distance = -1, faction = "-", guild = "-", ship = "-", sector = -1}
@@ -84,7 +87,8 @@ RegisterEvent(GuildNotifier.target, "TARGET");
 -- Send a HELP message when your health is less than 50%
 GuildNotifier.help_seeker = {}
 function GuildNotifier.help_seeker:OnEvent(e , data)
-    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable then return end
+    if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
     if e ~= "PLAYER_GOT_HIT" then return end
 
     local _, health = GuildNotifier.get_player_info()
@@ -102,7 +106,8 @@ RegisterEvent(GuildNotifier.help_seeker, "PLAYER_GOT_HIT");
 -- Displays a notification asking for your health
 GuildNotifier.helper = {}
 function GuildNotifier.helper:OnEvent(e, data)
-    if not GuildNotifier.gn_enable or not GuildNotifier.mode_battle then return end
+    if not GuildNotifier.gn_enable then return end
+    if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
     if e ~= "HELP" and data == nil then return end
     local name, health, guildtag, faction, ship, distance = GuildNotifier.get_player_info(data.name)
     local sectorid = string.match(data.msg, ":(%d+)") or -1

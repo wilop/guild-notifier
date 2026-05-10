@@ -12,12 +12,14 @@ function GuildNotifier.cmd(_,args)
         GuildNotifier.off()
     elseif cmd == "info" then
         GuildNotifier.print_info()
+    elseif cmd == "sound" then
+        GuildNotifier.sound_mode()
     elseif cmd == "battle" then
         GuildNotifier.battle_mode()
     elseif cmd == "channel" then
         GuildNotifier.set_channel(args[2])
-    elseif cmd == "sound" then
-        GuildNotifier.sound_mode()
+    elseif cmd == "extra" then
+        GuildNotifier.extra()
     elseif cmd == "vol" then
         GuildNotifier.set_volume(args[2])
     elseif cmd == "test" then
@@ -30,7 +32,7 @@ end
 -- Show commands options and usage.
 function GuildNotifier.print_help()
     print("Guild Notifier commands:")
-    print("/gn on | off | info | sound | battle | channel | vol # (0-5) | test")
+    print("/gn on | off | info | sound | battle | channel | extra |vol # (0-5) | test")
 end
 -- Show the plugin information.
 function GuildNotifier.print_info()
@@ -57,6 +59,7 @@ function GuildNotifier.off()
     GuildNotifier.gn_enable = false
     GuildNotifier.mode_sound = false
     GuildNotifier.mode_sound = false
+    GuildNotifier.extra_notifications = false
     GuildNotifier:destroy_gui()
     GuildNotifier.set_volume("0")
     print("Guild Notifier: OFF")
@@ -95,6 +98,15 @@ function GuildNotifier.sound_mode()
         print("Guild Notifier: Sound mode "..state)
         print("Just plays sounds!")
     end
+end
+
+---Toggle (on | off) extra notifications (TARGET and HELP) in normal mode.
+function GuildNotifier.extra()
+	if not GuildNotifier.gn_enable then GuildNotifier.on() end
+    GuildNotifier.extra_notifications = not GuildNotifier.extra_notifications
+    local state = GuildNotifier.extra_notifications and "ON" or "OFF"
+    local msg = "TARGET & HELP\nUsage: /gn extra on | off \nUsag"
+    GuildNotifier.push_notification("Extra notifications", state, msg,"IDLE")
 end
 
 -- Run different tests.
