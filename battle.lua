@@ -153,18 +153,40 @@ end
 
 ---Sets the battle chat channel.
 ---@param channel string The channel to be set.
----@return boolean
+---@return boolean resul true if channel is updated or false if not.
 ---@return string channel The new, current or ignored channel.
+---@return string state The state of the channel (CURRENT | UPDATED | IGNORED)
 function GuildNotifier.set_battle_channel(channel)
     local channel_ = GuildNotifier.battle_channel
-    if channel == "default" then channel_ = "2097"
-    elseif channel == "guild" then channel_ = "GUILD"
-    elseif tonumber(channel) then channel_ = tostring(channel)
+    local state = "CURRENT"
+    local resul = false
+
+    if channel_ == channel then return resul, channel_, state
+    elseif channel == "default" then
+        channel_ = "2097"
+        state = "UPDATED"
+        resul = true
+    elseif channel == "guild" then
+        channel_ = "GUILD"
+        state = "UPDATED"
+        resul = true
+    elseif tonumber(channel) then
+        local c = tonumber(channel)
+        if GuildNotifier.vo_designated_channels[c] then
+            channel_ = GuildNotifier.vo_designated_channels[c]
+            state = "IGNORED"
+            resul = false
+        else
+            channel_ = tostring(channel)
+            state = "UPDATED"
+            resul = true
+        end
     else
-        return false, channel_
+        state = "CURRENT"
     end
-    GuildNotifier.battle_channel = channel_
-    return true, channel_
+
+    if resul then GuildNotifier.battle_channel = channel_ end
+    return resul, channel_, state
 end
 
 ---END of BATTLE MODE

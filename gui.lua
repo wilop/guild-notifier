@@ -210,7 +210,7 @@ function GuildNotifier:fade(timeout, state)
         self:init()
         end
 
-        if not console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1))) then return false end
+        console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1)))
 
     end
     console_print("🔴 End of fade")

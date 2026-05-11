@@ -84,8 +84,7 @@ end
 ---@param channel string the channel to set.
 function GuildNotifier.set_channel(channel)
     if not GuildNotifier.gn_enable then GuildNotifier.on() end
-	local resul, channel_ = GuildNotifier.set_battle_channel(channel)
-    local state = resul and "Changed!" or "Current"
+	local _, channel_, state = GuildNotifier.set_battle_channel(channel)
     local msg = string.format("%s\nUsage: /gn channel default | guild | #\nExample: /gn channel 2097", channel_)
     GuildNotifier.push_notification("Battle mode channel", state, msg,"IDLE")
 end
