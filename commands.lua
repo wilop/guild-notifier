@@ -110,7 +110,7 @@ function GuildNotifier.extra()
 	if not GuildNotifier.gn_enable then GuildNotifier.on() end
     GuildNotifier.extra_notifications = not GuildNotifier.extra_notifications
     local state = GuildNotifier.extra_notifications and "ON" or "OFF"
-    local msg = "TARGET & HELP\nUsage: /gn extra on | off \nUsag"
+    local msg = "TARGET & HELP\nUsage: /gn extra on | off"
     GuildNotifier.push_notification("Extra notifications", state, msg,"IDLE")
 end
 
@@ -150,8 +150,19 @@ function GuildNotifier.set_volume(v)
     end
 end
 
+---Enable testing mode. Receives notifications for outgoing messages.
+---@param enable boolean True to enable testing mode, false to disable (default false).
+function GuildNotifier.testing_mode()
+    if not GuildNotifier.gn_enable then GuildNotifier.on() end
+        GuildNotifier.testing = not GuildNotifier.testing
+        local state = GuildNotifier.testing and "ON" or "OFF"
+        local msg = "\nReceives notifications for outgoing messages"
+        GuildNotifier.push_notification("Testing mode", state, msg,"IDLE")
+end
+
 ---@section Register and bind user commands.
 RegisterUserCommand("gn", GuildNotifier.cmd)
 RegisterUserCommand("gn_target", GuildNotifier.cmd_send_target)
+RegisterUserCommand("gn_testing", GuildNotifier.testing_mode)
 gkinterface.BindCommand(gkinterface.GetInputCodeByName("0"), "gn_target")
 ---@end

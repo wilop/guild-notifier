@@ -13,6 +13,7 @@ GuildNotifier.mode_sound = false
 GuildNotifier.state = 0
 GuildNotifier.battle_channel = "2097"
 GuildNotifier.extra_notifications = false
+GuildNotifier.testing = false
 ---@end
 
 ---Gui states.

@@ -42,7 +42,7 @@ GuildNotifier.chat_receiver = chatreceiver.OnEvent
 function chatreceiver:OnEvent(e, data)
     if GuildNotifier.gn_enable then
         if GuildNotifier.chat_events[e]  and not GuildNotifier.mode_battle then
-            if data ~= nil and data.name ~= GetPlayerName() then
+            if data ~= nil and GuildNotifier.is_incoming(data.name) then
                 local name = data.name or ""
                 local charid = GetCharacterIDByName(name) or -1
                 local guildtag = data.guildtag or GetGuildTag(charid) or ""
@@ -56,6 +56,16 @@ function chatreceiver:OnEvent(e, data)
         end
     end
     GuildNotifier.chat_receiver(self, e, data)
+end
+
+---Verify if is an incoming or an outgoing notification.
+---When testing mode is ON, it returns true.
+---@param name string The player name who sent the message.
+---@return boolean incoming Returns true if is incoming or false if not.
+function GuildNotifier.is_incoming(name)
+    if GuildNotifier.testing then return true end
+    if GetPlayerName() == name then return false end
+    return true
 end
 
 ---Gets info about a player for help or as target.

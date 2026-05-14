@@ -13,7 +13,7 @@ function GuildNotifier.battle_receiver:OnEvent(e, data)
     if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then return end
     if GuildNotifier.battle_channel == "GUILD" and tostring(data.channelid) == GuildNotifier.battle_channel then return end
 
-    if GetPlayerName() == data.name then return end
+    if not GuildNotifier.is_incoming(data.name) then return end
 
     local msg = data.msg:upper()
 
