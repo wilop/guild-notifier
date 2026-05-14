@@ -259,6 +259,7 @@ end
 ---Verify if the  gui is added in the HUD and ready for notifications.
 ---@return boolean
 function GuildNotifier:is_gui_ready()
+    if self.gui == nil then return false end
     if xpcall(iup.GetParent, debug.traceback, self.gui) then
         return true
     end
@@ -266,15 +267,23 @@ function GuildNotifier:is_gui_ready()
     return false
 end
 
-GuildNotifier:init()
-
 ---@section EVENT_HANDLERS
----Starts the Guild Notifier gui.
+---Hides and shows the GN gui again to be displayed correctly after HUD scale.
 ---@param e string The event (ignored).
 ---@param data table The data for this event (ignored).
 function GuildNotifier:rHUDxscale(e, data)
-    self:init()
+    self:fade(50, "HIDDEN")
+    self:fade(50, "IDLE")
+end
+
+---Shows the GN gui when HUD is shown.
+---@param e string The event (ignored).
+---@param data table The data for this event (ignored).
+function GuildNotifier:HUD_SHOW(e, data)
+    print("HUD_SHOW")
+    if not self:is_gui_ready() then self:init() end
 end
 
 RegisterEvent(GuildNotifier, 'rHUDxscale')
+RegisterEvent(GuildNotifier, 'HUD_SHOW')
 ---@end
