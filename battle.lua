@@ -9,9 +9,10 @@ function GuildNotifier.battle_receiver:OnEvent(e, data)
     if not GuildNotifier.gn_enable then return end
     if not GuildNotifier.mode_battle and not GuildNotifier.extra_notifications then return end
     if not GuildNotifier.battle_chat_events[e] or data == nil then return end
-    if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then
-        return
-    end
+    if tonumber(data.channelid) and GuildNotifier.vo_designated_channels[data.channelid] then return end
+    if GuildNotifier.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GuildNotifier.battle_channel then return end
+    if GuildNotifier.battle_channel == "GUILD" and tostring(data.channelid) == GuildNotifier.battle_channel then return end
+
     if GetPlayerName() == data.name then return end
 
     local msg = data.msg:upper()
