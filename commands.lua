@@ -20,6 +20,8 @@ function GuildNotifier.cmd(_, args)
         GuildNotifier.battle_mode()
     elseif cmd == "channel" then
         GuildNotifier.set_channel(args[2])
+    elseif cmd == "storm" then
+        GuildNotifier.storm()
     elseif cmd == "extra" then
         GuildNotifier.extra()
     elseif cmd == "vol" then
@@ -35,7 +37,7 @@ end
 ---Show commands options and usage.
 function GuildNotifier.print_help()
     print("Guild Notifier commands:")
-    print("/gn on | off | info | sound | battle | channel | extra |vol # (0-5) | test")
+    print("/gn on | off | info | sound | battle | channel | storm | extra | vol # (0-5) | test")
 end
 
 ---Show the plugin information.
@@ -105,12 +107,21 @@ function GuildNotifier.sound_mode()
     end
 end
 
+---Toggle (on | off) ion storms notifications.
+function GuildNotifier.storm()
+	if not GuildNotifier.gn_enable then GuildNotifier.on() end
+    GuildNotifier.storms = not GuildNotifier.storms
+    local state = GuildNotifier.storms and "ON" or "OFF"
+    local msg = "Reports and Receives iom storm notifications\nUsage: /gn storm"
+    GuildNotifier.push_notification("Storms notifications", state, msg,"IDLE")
+end
+
 ---Toggle (on | off) extra notifications (TARGET and HELP) in normal mode.
 function GuildNotifier.extra()
 	if not GuildNotifier.gn_enable then GuildNotifier.on() end
     GuildNotifier.extra_notifications = not GuildNotifier.extra_notifications
     local state = GuildNotifier.extra_notifications and "ON" or "OFF"
-    local msg = "TARGET & HELP\nUsage: /gn extra on | off"
+    local msg = "TARGET & HELP\nUsage: /gn extra"
     GuildNotifier.push_notification("Extra notifications", state, msg,"IDLE")
 end
 

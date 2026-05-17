@@ -13,6 +13,7 @@ GuildNotifier.mode_sound = false
 GuildNotifier.state = 0
 GuildNotifier.battle_channel = "2097"
 GuildNotifier.extra_notifications = false
+GuildNotifier.storms = false
 GuildNotifier.testing = false
 ---@end
 
@@ -57,6 +58,7 @@ GuildNotifier.battle_events = {
 GuildNotifier.common_events = {
     ["GUILD_MEMBER_ADDED"] = true,
     ["GUILD_MEMBER_REMOVED"] = true,
+    ["STORM"] = true,
     ["ZOOM"] = true,
     ["IDLE"] = true,
 }
@@ -86,6 +88,7 @@ GuildNotifier.sounds = {
     ["GUILD_MEMBER_ADDED"] = sounds.."guild.wav",
     ["GUILD_MEMBER_REMOVED"] = sounds.."guild.wav",
     ["HELP"] = sounds.."help.wav",
+    ["STORM"] = sounds.."help.wav",
     ["TARGET"] = sounds.."target.wav",
     ["ZOOM"] = sounds.."zoom.wav",
 }
@@ -104,6 +107,7 @@ GuildNotifier.icons = {
     ["GUILD_MEMBER_ADDED"] = GUILD_ICON,
     ["GUILD_MEMBER_REMOVED"] = GUILD_ICON,
     ["HELP"] = icons.."help.png",
+    ["STORM"] = icons.."storm.png",
     ["TARGET"] = icons.."target.png",
     ["IDLE"] = PROFILE_ICON,
 }
@@ -114,8 +118,9 @@ GuildNotifier.tests = {
     ["2"] = {test = "CHAT_MSG_GROUP", msg = "A group test message"},
     ["3"] = {test = "CHAT_MSG_GUILD", msg = "A guild test message"},
     ["4"] = {test = "GUILD_MEMBER_ADDED", msg = "Test, member joined"},
-    ["5"] = {test = "HELP", msg = "HELP:2903"},
-    ["6"] = {test = "TARGET", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur|sector=2903"},
+    ["5"] = {test = "STORM", msg = "STORM(2725): Artana Anquillus E-11"},
+    ["6"] = {test = "HELP", msg = "HELP:2903"},
+    ["7"] = {test = "TARGET", msg = "target=*Data Dotos|health=100|distance=1331|faction=Itani|guild=|ship=Centaur|sector=2903"},
 }
 
 ---Designated Vendetta Online channel to ignore.

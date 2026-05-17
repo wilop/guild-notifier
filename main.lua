@@ -20,6 +20,7 @@ if GN_ENABLE then
     dofile("gui.lua")
     dofile("notifier.lua")
     dofile("battle.lua")
+    dofile("storm.lua")
     dofile("tester.lua")
     dofile("commands.lua")
 end
