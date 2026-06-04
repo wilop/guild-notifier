@@ -280,7 +280,6 @@ end
 ---@param e string The event (ignored).
 ---@param data table The data for this event (ignored).
 function GuildNotifier:HUD_SHOW(e, data)
-    print("HUD_SHOW")
     if not self:is_gui_ready() then self:init() end
 end
 
