@@ -114,6 +114,7 @@ function GuildNotifier.storm()
     local state = GuildNotifier.storms and "ON" or "OFF"
     local msg = "Reports and Receives iom storm notifications\nUsage: /gn storm"
     GuildNotifier.push_notification("Storms notifications", state, msg,"IDLE")
+    GuildNotifier.load_storm_reports()
 end
 
 ---Toggle (on | off) extra notifications (TARGET and HELP) in normal mode.
