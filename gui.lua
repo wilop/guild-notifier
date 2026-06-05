@@ -1,4 +1,5 @@
 ---@class gui
+GuildNotifier.delay = true
 GuildNotifier.gui = iup.hbox {}
 GuildNotifier.gui_data = {
     wing_left = GuildNotifier.wings["SHOWN"].left,
@@ -281,8 +282,16 @@ end
 ---@param data table The data for this event (ignored).
 function GuildNotifier:HUD_SHOW(e, data)
     if not self:is_gui_ready() then self:init() end
+    GuildNotifier.delay = false
+end
+---Hides the GN gui when HUD is shown.
+---@param e string The event (ignored).
+---@param data table The data for this event (ignored).
+function GuildNotifier:HUD_HIDE(e, data)
+    GuildNotifier.delay = true
 end
 
 RegisterEvent(GuildNotifier, 'rHUDxscale')
 RegisterEvent(GuildNotifier, 'HUD_SHOW')
+RegisterEvent(GuildNotifier, 'HUD_HIDE')
 ---@end

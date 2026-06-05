@@ -36,7 +36,7 @@ function GuildNotifier.guild_member_removed:OnEvent(e, charid, reason)
 end
 RegisterEvent(GuildNotifier.guild_member_removed, "GUILD_MEMBER_REMOVED");
 
----@type func(ihandler: class, event: string, data: table)
+---@class chatreceiver
 GuildNotifier.chat_receiver = chatreceiver.OnEvent
 ---Receives messages from chat events
 function chatreceiver:OnEvent(e, data)
@@ -121,7 +121,18 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
         msg = tostring(msg) or "",
         icon = icon,
     })
+    if GuildNotifier.delay then
+        Timer():SetTimeout(5000, function ()
+           GuildNotifier.display_notification()
+        end)
+    else
+        GuildNotifier.display_notification()
+    end
+    GuildNotifier.delay = false
+end
 
+---Displays the notifications in the gui.
+function GuildNotifier.display_notification()
     if not current then
         GuildNotifier.next_notification()
         GuildNotifier.play_sound("ZOOM")
