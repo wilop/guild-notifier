@@ -112,7 +112,6 @@ function GuildNotifier.send_storm_report()
         local msg = table.remove(storm_temp_reports, 1)
 --         GuildNotifier.send_battle_messages(channel, msg)
         SendChat("/me "..tostring(msg), "CHANNEL", storm_chat_channel)
-        print("Sending: "..msg)
     end
 end
 
@@ -222,41 +221,41 @@ function GuildNotifier.load_storm_reports()
         if sectorid ~= nil and time ~= nil then
             if time > newer_than then
                 GuildNotifier.insert_storm_report(sectorid, time)
-                print("Insertó una nota")
             end
-            print("Muy vieja")
         end
-        print(sectorid)
-        print(time)
     end
     GuildNotifier.add_storms_to_navmap()
-    print("Terminó de cargar las notas")
 end
 
 ---Adds all storm reports to Navmap.
 function GuildNotifier.add_storms_to_navmap()
     for sectorid, data in pairs(storms_queue) do
+        if SystemNotes[data.systemid] == nil then
+            SystemNotes[data.systemid] = {[sectorid] = ""}
+        end
         local old_note = SystemNotes[data.systemid][sectorid] or ""
         local new_note = string.format("\nStorm(%d)", data.time)
         local match_note = string.match(old_note, string.format(",?\nStorm%%(%d+%%)", data.time))
         if match_note == nil then
             new_note = old_note .. new_note
             SystemNotes[data.systemid][sectorid] = new_note
-            print("Agregó una nota")
         end
     end
-    print("Terminó de agregar las notas al navmap")
 end
 
 --- Removes all storm reports from Navmap.
 function GuildNotifier.remove_storms_from_navmap()
-    for sectorid, data in pairs(storms_queue) do
-        local old_note = SystemNotes[data.systemid][sectorid] or ""
-        local new_note = string.gsub(old_note,",?\nStorm%(%d+%)", "")
-        SystemNotes[data.systemid][sectorid] = new_note
-        print("Borró una nota")
+    for system in pairs(SystemNotes) do
+        if system ~= storm_chat_channel then
+            for sector in pairs(SystemNotes[system]) do
+                local old_note = SystemNotes[system][sector]
+                if type(old_note) == "string" then
+                    local new_note = string.gsub(old_note,",?\nStorm%(%d+%)", "")
+                    SystemNotes[system][sector] = new_note
+                end
+            end
+        end
     end
-    print("Terminó de remover las notas al navmap")
 end
 
 ---END of ION STORMS
