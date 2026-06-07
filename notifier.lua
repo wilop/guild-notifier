@@ -121,14 +121,17 @@ function GuildNotifier.push_notification(title, subtitle, msg, icon)
         msg = tostring(msg) or "",
         icon = icon,
     })
+    GuildNotifier.reset_current_notification()
     if GuildNotifier.delay then
-        Timer():SetTimeout(5000, function ()
-           GuildNotifier.display_notification()
+        if GuildNotifier.delay_timer and GuildNotifier.delay_timer:IsActive() then GuildNotifier.delay_timer:Kill() end
+        GuildNotifier.delay_timer = Timer()
+        GuildNotifier.delay_timer:SetTimeout(5000, function ()
+            GuildNotifier.display_notification()
+            GuildNotifier.delay = false
         end)
     else
         GuildNotifier.display_notification()
     end
-    GuildNotifier.delay = false
 end
 
 ---Displays the notifications in the gui.
@@ -138,10 +141,10 @@ function GuildNotifier.display_notification()
         GuildNotifier.play_sound("ZOOM")
         if GuildNotifier.mode_battle then
             GuildNotifier:set_wings("BATTLE")
-            GuildNotifier:fade(50,"BATTLE")
+            GuildNotifier:set_gui_state("BATTLE")
         else
             GuildNotifier:set_wings("SHOWN")
-            GuildNotifier:fade(50,"SHOWN")
+            GuildNotifier:set_gui_state("SHOWN")
         end
     end
 end
@@ -166,7 +169,14 @@ function GuildNotifier.update_notification()
             current = nil
             GuildNotifier.play_sound("ZOOM")
             GuildNotifier:set_icon("IDLE")
-            GuildNotifier:fade(50, "IDLE")
+            GuildNotifier:set_gui_state("IDLE")
         end
     end)
+end
+
+---Resets current notification if it was not displayed.
+function GuildNotifier.reset_current_notification()
+    if not current then return end
+    table.insert(notify_queue, 1, current)
+    current = nil
 end

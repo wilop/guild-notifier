@@ -52,11 +52,13 @@ end
 ---Enable the Guild Notifier and turn it on.
 function GuildNotifier.on()
     GuildNotifier.gn_enable = true
+    GuildNotifier:init_gui_data()
     GuildNotifier.state = GuildNotifier.states["HIDDEN"]
-    if GuildNotifier:fade(50, "IDLE") then
+    if GuildNotifier:set_gui_state("SHOWN") then
         local vol = tostring(VOLUME) or "3"
         GuildNotifier.set_volume(vol)
         print("Guild Notifier: ON")
+        GuildNotifier:set_gui_state("IDLE")
     end
 end
 
@@ -66,7 +68,7 @@ function GuildNotifier.off()
     GuildNotifier.mode_sound = false
     GuildNotifier.mode_sound = false
     GuildNotifier.extra_notifications = false
-    GuildNotifier:destroy_gui()
+    GuildNotifier:hide()
     GuildNotifier.set_volume("0")
     print("Guild Notifier: OFF")
 end
@@ -98,7 +100,7 @@ function GuildNotifier.sound_mode()
     GuildNotifier.mode_sound = not GuildNotifier.mode_sound
     local state = GuildNotifier.mode_sound and "ON" or "OFF"
     local gui_state = GuildNotifier.mode_sound and "HIDDEN" or "IDLE"
-    if GuildNotifier:fade(50, gui_state) then
+    if GuildNotifier:set_gui_state(gui_state) then
         GuildNotifier.mode_battle = false
         local vol = tostring(VOLUME) or "3"
         GuildNotifier.set_volume(vol)

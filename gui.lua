@@ -1,16 +1,23 @@
----@class gui
 GuildNotifier.delay = true
+GuildNotifier.delay_timer = nil
+
+---@class gui
 GuildNotifier.gui = iup.hbox {}
-GuildNotifier.gui_data = {
-    wing_left = GuildNotifier.wings["SHOWN"].left,
-    wing_right = GuildNotifier.wings["SHOWN"].right,
-    icon = PROFILE_ICON or "",
-    fgcolor1 = "",
-    fgcolor2 = "",
-    title = "Welcome",
-    subtitle = "Pilot",
-    msg = "Thanks for using Guild Notifier.\nHave a great journey!."
-}
+GuildNotifier.gui_data = {}
+
+---Sets the gui data with initial values.
+function GuildNotifier:init_gui_data()
+    self.gui_data = {
+        wing_left = GuildNotifier.wings["SHOWN"].left,
+        wing_right = GuildNotifier.wings["SHOWN"].right,
+        icon = PROFILE_ICON or "",
+        fgcolor1 = "",
+        fgcolor2 = "",
+        title = "Welcome",
+        subtitle = "Pilot",
+        msg = "Thanks for using Guild Notifier.\nHave a great journey!."
+    }
+end
 
 ---Create the gui to be displayed in HUD.
 function GuildNotifier:create_gui()
@@ -124,7 +131,7 @@ end
 ---Set the gui data to be displayed.
 ---@param data table
 function GuildNotifier:set_gui_data(data)
-
+    if GuildNotifier.delay_timer and GuildNotifier.delay_timer:IsActive() then return end
     if not self.title or not self.gui then
         console_print("⚠️ Intent of update without a gui.")
         return
@@ -146,6 +153,7 @@ end
 ---Set the icon to be displayed.
 ---@param icon string The icon name associated to an event.
 function GuildNotifier:set_icon(icon)
+    if GuildNotifier.delay_timer and GuildNotifier.delay_timer:IsActive() then return end
     self.gui_data.icon = GuildNotifier.icons[icon] or ""
     self.gui_icon_left.image = self.gui_data.icon
     self.gui_icon_right.image = self.gui_data.icon
@@ -154,6 +162,7 @@ end
 ---Set the wings to be displayed.
 ---@param wing string The wing associated to mode.
 function GuildNotifier:set_wings(wing)
+    if GuildNotifier.delay_timer and GuildNotifier.delay_timer:IsActive() then return end
 	self.gui_data.wing_left = GuildNotifier.wings[wing].left or ""
 	self.gui_data.wing_right = GuildNotifier.wings[wing].right or ""
 	self.wing_left.image = self.gui_data.wing_left
@@ -164,6 +173,7 @@ end
 ---@param timeout integer The duration time of each blink in milliseconds.
 ---@param times integer The number of repetitions.
 function GuildNotifier:icon_blinker(timeout, times)
+    if GuildNotifier.delay_timer and GuildNotifier.delay_timer:IsActive() then return end
     if not self.gui_icon_left or not self.gui_icon_right then
         return
     end
@@ -191,12 +201,12 @@ function GuildNotifier:icon_blinker(timeout, times)
     blink(times)
 end
 
----Make a transition between the gui states.
----@param timeout integer The time duration in milliseconds.
+---Sets the gui state and swaps the new gui state.
 ---@param state string A gui state to be set.
 ---@return boolean
-function GuildNotifier:fade(timeout, state)
-    console_print("🔴 Begin of fade")
+function GuildNotifier:set_gui_state(state)
+    if GuildNotifier.delay_timer and GuildNotifier.delay_timer:IsActive() then return false end
+    console_print("🔴 Begin of set_gui_state")
     if not GuildNotifier.states[state] then return false end
     if GuildNotifier.states[state] == GuildNotifier.state then return false end
 
@@ -206,22 +216,22 @@ function GuildNotifier:fade(timeout, state)
         self:hide()
         return true
     else
-        local function animate(s)
-        self:destroy_gui()
+        local function swap()
+        self:hide()
         self:init()
         end
 
-        console_print("🔴 fade xpcall: ".. tostring(xpcall(animate, debug.traceback, 1)))
+        console_print("🔴 set_gui_state xpcall: ".. tostring(xpcall(swap, debug.traceback)))
 
     end
-    console_print("🔴 End of fade")
+    console_print("🔴 End of set_gui_state")
     return true
 end
 
 ---Refresh the gui.
 function GuildNotifier:refresh()
-    if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state then
-        iup.Refresh(self.gui)
+    if GuildNotifier.states["HIDDEN"] ~= GuildNotifier.state and GuildNotifier:is_gui_ready() then
+        iup.Refresh(HUD.pluginlayer)
     end
 end
 
@@ -236,14 +246,6 @@ end
 ---Hide the gui.
 function GuildNotifier:hide()
     iup.Detach(self.gui)
-end
-
--- Destroy de gui.
-function GuildNotifier:destroy_gui()
-    if self.gui ~= nil then
-        iup.Destroy(self.gui)
-        self.gui = nil
-    end
 end
 
 ---Create and show the gui.
@@ -269,29 +271,47 @@ function GuildNotifier:is_gui_ready()
 end
 
 ---@section EVENT_HANDLERS
----Hides and shows the GN gui again to be displayed correctly after HUD scale.
----@param e string The event (ignored).
+
+---Applies a delay when HUD scales and resets GN gui.
+---@param e string The game event rHUDxscale.
 ---@param data table The data for this event (ignored).
-function GuildNotifier:rHUDxscale(e, data)
-    self:fade(50, "HIDDEN")
-    self:fade(50, "IDLE")
+function GuildNotifier:rHUDxscale(e)
+    GuildNotifier.delay = true
+    GuildNotifier:set_gui_state("HIDDEN")
+    GuildNotifier:set_gui_state("IDLE")
+    GuildNotifier.delay = false
+    if GuildNotifier.testing then
+        print(e)
+        print(os.time())
+    end
 end
 
 ---Shows the GN gui when HUD is shown.
----@param e string The event (ignored).
----@param data table The data for this event (ignored).
-function GuildNotifier:HUD_SHOW(e, data)
-    if not self:is_gui_ready() then self:init() end
+---@param e string The game event HUD_SHOW.
+function GuildNotifier:HUD_SHOW(e)
+    if not self:is_gui_ready() then
+        self:init_gui_data()
+        self:init()
+    end
     GuildNotifier.delay = false
+    if GuildNotifier.testing then
+        print(e)
+        print(os.time())
+    end
 end
----Hides the GN gui when HUD is shown.
----@param e string The event (ignored).
----@param data table The data for this event (ignored).
+
+---Applies a delay to notifications when HUD is hidden.
+---@param e string The game event HUD_HIDE.
 function GuildNotifier:HUD_HIDE(e, data)
     GuildNotifier.delay = true
+    if GuildNotifier.testing then
+        print(e)
+        print(os.time())
+    end
 end
 
 RegisterEvent(GuildNotifier, 'rHUDxscale')
 RegisterEvent(GuildNotifier, 'HUD_SHOW')
 RegisterEvent(GuildNotifier, 'HUD_HIDE')
+
 ---@end
