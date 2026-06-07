@@ -6,19 +6,19 @@ local sounds = assets_path .. "sounds/"
 ---@end
 
 ---@section settings Settings and global vars.
-GuildNotifier.gn_enable = GN_ENABLE
-GuildNotifier.volume = VOLUME * 0.2 or 0.6
-GuildNotifier.mode_battle = false
-GuildNotifier.mode_sound = false
-GuildNotifier.state = 0
-GuildNotifier.battle_channel = "2097"
-GuildNotifier.extra_notifications = false
-GuildNotifier.storms = false
-GuildNotifier.testing = false
+GN.gn_enable = GN_ENABLE
+GN.volume = VOLUME * 0.2 or 0.6
+GN.mode_battle = false
+GN.mode_sound = false
+GN.state = 0
+GN.battle_channel = "2097"
+GN.extra_notifications = false
+GN.storms = false
+GN.testing = false
 ---@end
 
 ---Gui states.
-GuildNotifier.states = {
+GN.states = {
     ["HIDDEN"] = -1,
     ["IDLE"] =  0,
     ["SHOWN"] = 1,
@@ -26,7 +26,7 @@ GuildNotifier.states = {
 }
 
 ---Volume levels.
-GuildNotifier.volume_levels = {
+GN.volume_levels = {
     ["0"] = 0.0,
     ["1"] = 0.2,
     ["2"] = 0.4,
@@ -36,26 +36,26 @@ GuildNotifier.volume_levels = {
 }
 
 ---Chat events for notifications.
-GuildNotifier.chat_events = {
+GN.chat_events = {
     ["CHAT_MSG_PRIVATE"] = true,
     ["CHAT_MSG_GROUP"] = true,
     ["CHAT_MSG_GUILD"] = true,
 }
 
 ---Chat events for battle notifications.
-GuildNotifier.battle_chat_events = {
+GN.battle_chat_events = {
     ["CHAT_MSG_CHANNEL_EMOTE"] = true,
     ["CHAT_MSG_GUILD_EMOTE"] = true,
 }
 
 ---Battle events.
-GuildNotifier.battle_events = {
+GN.battle_events = {
     ["HELP"] = true,
     ["TARGET"] = true,
 }
 
 ---Guild activity events.
-GuildNotifier.common_events = {
+GN.common_events = {
     ["GUILD_MEMBER_ADDED"] = true,
     ["GUILD_MEMBER_REMOVED"] = true,
     ["STORM"] = true,
@@ -64,7 +64,7 @@ GuildNotifier.common_events = {
 }
 
 ---Reason to remove a guild member.
-GuildNotifier.guild_removed_reasons = {
+GN.guild_removed_reasons = {
     [0] = "Log off",
     [1] = "Resign",
     [2] = "Kicked out!",
@@ -72,7 +72,7 @@ GuildNotifier.guild_removed_reasons = {
 }
 
 ---Rank of a guild member.
-GuildNotifier.guild_ranks = {
+GN.guild_ranks = {
     [0] = "Member",
     [1] = "Lieutenant",
     [2] = "Council member",
@@ -81,7 +81,7 @@ GuildNotifier.guild_ranks = {
 }
 
 ---Sound names and their paths.
-GuildNotifier.sounds = {
+GN.sounds = {
     ["CHAT_MSG_PRIVATE"] = sounds.."private.wav",
     ["CHAT_MSG_GROUP"] = sounds.."group.wav",
     ["CHAT_MSG_GUILD"] = sounds.."guild.wav",
@@ -94,13 +94,13 @@ GuildNotifier.sounds = {
 }
 
 ---Wing mode textures and their paths.
-GuildNotifier.wings = {
+GN.wings = {
     ["SHOWN"] = {left = textures.."wing_left.png", right = textures.."wing_right.png"},
     ["BATTLE"] = {left = textures.."wing_battle_left.png", right = textures.."wing_battle_right.png"},
 }
 
 ---Icon names and their paths.
-GuildNotifier.icons = {
+GN.icons = {
     ["CHAT_MSG_PRIVATE"] =  icons.."msg_private.png",
     ["CHAT_MSG_GROUP"] = icons.."msg_group.png",
     ["CHAT_MSG_GUILD"] = icons.."msg_guild.png",
@@ -113,7 +113,7 @@ GuildNotifier.icons = {
 }
 
 ---Test and data for each test.
-GuildNotifier.tests = {
+GN.tests = {
     ["1"] = {test = "CHAT_MSG_PRIVATE", msg = "A private test message"},
     ["2"] = {test = "CHAT_MSG_GROUP", msg = "A group test message"},
     ["3"] = {test = "CHAT_MSG_GUILD", msg = "A guild test message"},
@@ -125,7 +125,7 @@ GuildNotifier.tests = {
 
 ---Designated Vendetta Online channel to ignore.
 ---Check the full list here: https://www.vendetta-online.com/x/msgboard/1/13762
-GuildNotifier.vo_designated_channels = {
+GN.vo_designated_channels = {
     [1] =  "Help Chat",
     [70] =  "German Chat",
     [97] =  "Windows Users",

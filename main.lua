@@ -1,12 +1,12 @@
 
 
-declare ('GuildNotifier', GuildNotifier or {})
+declare ('GN', GN or {})
 
-GuildNotifier.info = {
-    description = "Notification for yout incoming messages.",
+GN.info = {
+    description = "Guild Notifier: notifications for yout incoming messages.",
     author = "Otesten Vanar (wilop)",
     Github = "https://github.com/wilop/guild-notifier",
-    version = "1.0.0-beta.2",
+    version = "1.0.0-HEAD",
 }
 
 dofile("config.lua")

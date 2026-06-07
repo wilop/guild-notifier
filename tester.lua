@@ -1,15 +1,15 @@
 ---Trigger the events and test the notifications
 ---@param data table Data with a test name and a message.
-function GuildNotifier.tester(data)
-    if not GuildNotifier.gn_enable then return end
+function GN.tester(data)
+    if not GN.gn_enable then return end
     if data == nil then return end
     local test = data.test
 
-    if GuildNotifier.chat_events[test] then print("This test requires battle mode OFF.") end
-    if GuildNotifier.battle_events[test] then print("This test requires battle mode ON.") end
-    if GuildNotifier.common_events[test] then print("This test works with battle mode ON and OFF.") end
+    if GN.chat_events[test] then print("This test requires battle mode OFF.") end
+    if GN.battle_events[test] then print("This test requires battle mode ON.") end
+    if GN.common_events[test] then print("This test works with battle mode ON and OFF.") end
 
-    local name, _, guildtag = GuildNotifier.get_player_info()
+    local name, _, guildtag = GN.get_player_info()
     local sound = data.test
     local icon =  data.test
     local msg = data.msg
@@ -22,7 +22,7 @@ function GuildNotifier.tester(data)
         local charid = GetCharacterIDByName(name)
         ProcessEvent(test, charid, 0)
     else
-        console_print("🔴 push_notification xpcall: ".. tostring(xpcall(GuildNotifier.push_notification, debug.traceback, name, guildtag, msg, icon)))
-        console_print("🔴 play_sound xpcall: ".. tostring(xpcall(GuildNotifier.play_sound, debug.traceback, sound)))
+        console_print("🔴 push_notification xpcall: ".. tostring(xpcall(GN.push_notification, debug.traceback, name, guildtag, msg, icon)))
+        console_print("🔴 play_sound xpcall: ".. tostring(xpcall(GN.play_sound, debug.traceback, sound)))
     end
 end
