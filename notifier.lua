@@ -69,7 +69,7 @@ function GN.is_incoming(name)
 end
 
 ---Gets info about a player for help or as target.
----@param name string A player name.
+---@param name? string A player name (optional).
 ---@return string name The player name.
 ---@return integer health The player health.
 ---@return string guildtag The guildtag of the player or "-" if player is not in a guild.

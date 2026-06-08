@@ -263,9 +263,8 @@ end
 ---@return boolean
 function GN:is_gui_ready()
     if self.gui == nil then return false end
-    if xpcall(iup.GetParent, debug.traceback, self.gui) then
-        return true
-    end
+    local success, resul = xpcall(iup.GetParent, debug.traceback, self.gui)
+    if success and resul then return true end
     console_print("⛔ GN: gui is not ready yet!")
     return false
 end

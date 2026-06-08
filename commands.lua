@@ -76,7 +76,7 @@ end
 ---Toggle (on | off) battle mode.
 ---Battle mode displays HELP, TARGET and Guild's activity notifications.
 function GN.battle_mode()
-   if not GN.gn_enable then GN.on() end
+   if not GN:is_gui_ready() then GN.on() end
     GN.mode_battle = not GN.mode_battle
     local bstate = GN.mode_battle and "ON" or "OFF"
     GN.push_notification("Battle mode", bstate, "Only displays <<HELP>> and <<TARGETS>> notifcations!","IDLE")
@@ -87,7 +87,7 @@ end
 ---Check list here: https://www.vendetta-online.com/x/msgboard/1/13762
 ---@param channel string the channel to set.
 function GN.set_channel(channel)
-    if not GN.gn_enable then GN.on() end
+    if not GN:is_gui_ready() then GN.on() end
 	local _, channel_, state = GN.set_battle_channel(channel)
     local msg = string.format("%s\nUsage: /gn channel (default | guild | #)\nExample: /gn channel 2097", channel_)
     GN.push_notification("Battle mode channel", state, msg,"IDLE")
@@ -96,7 +96,7 @@ end
 ---Toggle (on | off) sound mode.
 ---Just plays sounds notifications and hides the gui.
 function GN.sound_mode()
-    if not GN.gn_enable then GN.on() end
+    if not GN:is_gui_ready() then GN.on() end
     GN.mode_sound = not GN.mode_sound
     local state = GN.mode_sound and "ON" or "OFF"
     local gui_state = GN.mode_sound and "HIDDEN" or "IDLE"
@@ -111,7 +111,7 @@ end
 
 ---Toggle (on | off) ion storms notifications.
 function GN.storm()
-	if not GN.gn_enable then GN.on() end
+	if not GN:is_gui_ready() then GN.on() end
     GN.storms = not GN.storms
     local state = GN.storms and "ON" or "OFF"
     local msg = "Reports and Receives iom storm notifications\nUsage: /gn storm"
@@ -121,7 +121,7 @@ end
 
 ---Toggle (on | off) extra notifications (TARGET and HELP) in normal mode.
 function GN.extra()
-	if not GN.gn_enable then GN.on() end
+	if not GN:is_gui_ready() then GN.on() end
     GN.extra_notifications = not GN.extra_notifications
     local state = GN.extra_notifications and "ON" or "OFF"
     local msg = "TARGET & HELP\nUsage: /gn extra"
@@ -131,7 +131,7 @@ end
 ---Run different tests.
 ---@param t string a key of the test ().
 function GN.test(t)
-    if not GN.gn_enable then
+    if not GN:is_gui_ready() then
         print("Guild Notifier: OFF")
         print("Turn ON Guild Notifier to use test command.")
         return
@@ -165,9 +165,8 @@ function GN.set_volume(v)
 end
 
 ---Enable testing mode. Receives notifications for outgoing messages.
----@param enable boolean True to enable testing mode, false to disable (default false).
 function GN.testing_mode()
-    if not GN.gn_enable then GN.on() end
+    if not GN:is_gui_ready() then GN.on() end
         GN.testing = not GN.testing
         local state = GN.testing and "ON" or "OFF"
         local msg = "\nReceives notifications for outgoing messages"
