@@ -2,8 +2,6 @@
 
 local storms_queue = {}
 local storm_temp_reports = {}
-local current_systemid = 0
-local current_sectorid = 0
 local storm_chat_channel = 2096
 
 ---@class storm_report_receiver
@@ -48,31 +46,6 @@ function GN:STORM_STOPPED(e)
     GN.send_storm_report()
 end
 RegisterEvent(GN, "STORM_STOPPED")
-
----Get de sectorid when the sector has changed.
----@param e string The event "SECTOR_CHANGED".
----@param sectorid integer The sectorid.
-function GN:SECTOR_CHANGED(e, sectorid)
-    if not GN.gn_enable then return end
-    if not GN.storms then return end
-    if e ~= "SECTOR_CHANGED" then return end
-    if sectorid == nil then return end
-    local system_changed =  GN.update_system(sectorid)
-    GN.show_storm_report(system_changed)
-end
-RegisterEvent(GN, "SECTOR_CHANGED");
-
----Update the system ID.
----@param sectorid integer The sectorid.
----@return boolean resul Returns true if the system ID was updated and false if not.
-function GN.update_system(sectorid)
-    if sectorid == nil then return false end
-    current_sectorid = sectorid
-    local system = GetCurrentSystemid() or -1
-    if current_systemid == system then return false end
-    current_systemid = system
-    return true
-end
 
 ---Sends a chat message with storm and pushes a reporting notification.
 ---Also pushes the report in storms_queue.
@@ -144,61 +117,6 @@ function GN.remove_storm_report(sectorid)
 	if not storms_queue[sectorid] then return false end
     storms_queue[sectorid] = nil
     return true
-end
-
----Show a GN notification with a storm's report.
----@param system boolean The range of searching. A true means reports for all system storms, false just neighbor storms.
-function GN.show_storm_report(system)
-    if #storms_queue == 0 then return end
-    local distance = system and 16 or 1
-    local storms = get_system_storms(distance)
-    local report = GN.get_storm_report(storms)
-    GN.push_notification("System", "ION Storms", report, "STORM")
-    GN.play_sound("STORM")
-end
-
----Convert a table of storms reports in a string with storm's locations.
----@param storms table The system storm reports.
----@return string locations Locations of the storm reports.
-function GN.get_storm_report(storms)
-    local locations = ""
-	if #storms == 0 then return locations end
-    for k, v in ipairs(storms) do
-        locations = locations.." "..v.location
-        if k == 10 then break end
-    end
-    return locations
-end
-
----Gets storms in current system.
----@param max_distance integer Maximum distance in sectors where you want to find storms.
----@return table system_storms A table with the located storms.
-function GN.get_system_storms(max_distance)
-    local system_storms = {}
-    local _, x1, y1 = SplitSectorID(current_sectorid)
-	for _,v  in ipairs(storms_queue) do
-        if v.systemid == current_systemid then
-            local distance = GN.get_storm_distance(x1, y1, v.x, v.y)
-            if distance > 0 and distance <= max_distance then
-                v.distance = distance
-                table.insert(system_storms, v)
-            end
-        end
-    end
-    table.sort(system_storms, function(a, b) return a.distance < b.distance end)
-    return system_storms
-end
-
----Gets the Euclidian distance from player to a storm.
----@param x1 integer Player x coordinate.
----@param y1 integer Player y coordinate.
----@param x2 integer Storm x coordinate.
----@param y2 integer Storm y coordinate.
----@return integer distance The distance (in sectors).
-function GN.get_storm_distance(x1, y1, x2, y2)
-    if x1 == nil or y1 == nil or x2 == nil or y2 == nil then return -1 end
-    local distance = math.sqrt((x1 - x2)^2 + (y1 - y2)^2) or -1
-    return distance
 end
 
 ---Saves storms reports to file.
