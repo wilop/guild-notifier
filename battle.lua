@@ -57,7 +57,7 @@ function GN.send_target()
 
     local format_send = "target=%s|health=%d|distance=%d|faction=%s|guild=%s|ship=%s|sector=%d"
     local msg = string.format(format_send, name, health, dist, faction, guild, ship, sectorid)
-    GN.send_battle_messages(channel, msg)
+    GN.send_battle_messages(msg)
 end
 
 ---@class target
@@ -84,7 +84,6 @@ function GN.target:OnEvent(e, data)
     local sector = ShortLocationStr(target.sector) or "-"
     local msg = string.format(format_notification, target.ship, target.health, sector, target.distance, target.faction)
 
-    GN:set_icon(e)
     GN.push_notification(target.target, target.guild, msg, e) -- Arguments: title, subtitle, msg, icon
     GN.play_sound(e)
 end
@@ -107,7 +106,7 @@ function GN.help_seeker:OnEvent(e , data)
     local channel = GN.battle_channel
     local msg = string.format("HELP:%d", sectorid)
 
-    GN.send_battle_messages(channel, msg)
+    GN.send_battle_messages(msg)
 end
 RegisterEvent(GN.help_seeker, "PLAYER_GOT_HIT");
 
@@ -126,9 +125,8 @@ function GN.helper:OnEvent(e, data)
 
     local format_notification = "%s\n<> Health: %d \t%s\t    Dist: %d m <>\n%s"
     local msg = string.format(format_notification, ship, health, sector, distance, faction)
-    local icon = e
-    GN:set_icon(e)
-    GN.push_notification(name, guildtag, msg, icon) -- Arguments: title, subtitle, msg, icon
+
+    GN.push_notification(name, guildtag, msg, e) -- Arguments: title, subtitle, msg, icon
     GN.play_sound(e)
 end
 RegisterEvent(GN.helper, "HELP");
@@ -136,58 +134,72 @@ RegisterEvent(GN.helper, "HELP");
 ---Send messages for battle events
 ---@param channel string The channel to send messages.
 ---@param msg string The message.
-function GN.send_battle_messages(channel, msg)
-    if tostring(channel) == "GUILD" then
+function GN.send_battle_messages(msg)
+    if GN.battle_destiny == "GUILD" then
         Timer():SetTimeout(50, function ()
             SendChat("/me "..msg, "GUILD")
         end)
     else
-        local active_channel = GetActiveChatChannel()
-        local channel_ = tonumber(channel)
-        JoinChannel(channel_)
         Timer():SetTimeout(50, function ()
-            SendChat("/me "..msg, "CHANNEL", channel_)
+            SendChat("/me "..msg, "CHANNEL", GN.battle_channel)
         end)
-        JoinChannel(active_channel)
     end
 end
 
----Sets the battle chat channel.
----@param channel string The channel to be set.
----@return boolean resul true if channel is updated or false if not.
----@return string channel The new, current or ignored channel.
----@return string state The state of the channel (CURRENT | UPDATED | IGNORED)
-function GN.set_battle_channel(channel)
-    local channel_ = GN.battle_channel
+---Sets the battle chat channel and destiny.
+---@param input string The channel or destiny to be set.
+---@return boolean success true if channel or destiny is updated or false if not.
+---@return string resul The new, current or ignored channel|destiny.
+---@return string state The state of the channel or destiny (CURRENT | UPDATED | IGNORED).
+function GN.set_battle_channel(input)
     local state = "CURRENT"
-    local resul = false
+    local success = false
+    local resul = input
 
-    if channel_ == channel then return resul, channel_, state
-    elseif channel == "default" then
-        channel_ = "2097"
-        state = "UPDATED"
-        resul = true
-    elseif channel == "guild" then
-        channel_ = "GUILD"
-        state = "UPDATED"
-        resul = true
-    elseif tonumber(channel) then
-        local c = tonumber(channel)
-        if GN.vo_designated_channels[c] then
-            channel_ = GN.vo_designated_channels[c]
-            state = "IGNORED"
-            resul = false
-        else
-            channel_ = tostring(channel)
-            state = "UPDATED"
-            resul = true
+    if tonumber(input) then
+        local channel_ = tonumber(input)
+        if channel_ ~= GN.battle_channel then
+            if GN.vo_designated_channels[channel_] then
+                resul = GN.vo_designated_channels[channel_]
+                state = "IGNORED"
+                success = false
+            else
+                GN.battle_channel = channel_
+                GN.battle_destiny = "CHANNEL"
+                state = "UPDATED"
+                success = true
+            end
         end
-    else
-        state = "CURRENT"
+    elseif input == "default" then
+        GN.battle_channel = 2097
+        GN.battle_destiny = "CHANNEL"
+        state = "UPDATED"
+        success = true
+    elseif input == "guild" then
+        GN.battle_destiny = "GUILD"
+        state = "UPDATED"
+        success = true
     end
 
-    if resul then GN.battle_channel = channel_ end
-    return resul, channel_, state
+    if success and GN.battle_destiny == "CHANNEL" then
+        GN.join_chat_channel(GN.battle_channel)
+    end
+    return success, resul, state
 end
 
+---Joins a channel to the game channel list.
+---@param channel integer The channel to join.
+function GN.join_chat_channel(channel)
+    if type(channel) ~= "number" then return end
+    local active_channel = GetActiveChatChannel()
+    JoinChannel(channel)
+    JoinChannel(active_channel)
+end
+
+---Joins to the battle channel.
+function GN.init_battle_mode()
+    if not GN.gn_enable then return end
+    if not GN.mode_battle and not GN.extra_notifications then return end
+    GN.join_chat_channel(GN.battle_channel)
+end
 ---END of BATTLE MODE

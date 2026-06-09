@@ -65,9 +65,10 @@ end
 ---Disable the Guild Notifier and turn it off, reset all states.
 function GN.off()
     GN.gn_enable = false
-    GN.mode_sound = false
+    GN.mode_battle = false
     GN.mode_sound = false
     GN.extra_notifications = false
+    GN.storms = false
     GN:hide()
     GN.set_volume("0")
     print("Guild Notifier: OFF")
@@ -80,6 +81,7 @@ function GN.battle_mode()
     GN.mode_battle = not GN.mode_battle
     local bstate = GN.mode_battle and "ON" or "OFF"
     GN.push_notification("Battle mode", bstate, "Only displays <<HELP>> and <<TARGETS>> notifcations!","IDLE")
+    GN.init_battle_mode()
 end
 
 ---Set the chat channel for the battle mode.
@@ -116,7 +118,7 @@ function GN.storm()
     local state = GN.storms and "ON" or "OFF"
     local msg = "Reports and Receives iom storm notifications\nUsage: /gn storm"
     GN.push_notification("Storms notifications", state, msg,"IDLE")
-    GN.load_storm_reports()
+    GN.init_storm_reports()
 end
 
 ---Toggle (on | off) extra notifications (TARGET and HELP) in normal mode.
@@ -126,6 +128,7 @@ function GN.extra()
     local state = GN.extra_notifications and "ON" or "OFF"
     local msg = "TARGET & HELP\nUsage: /gn extra"
     GN.push_notification("Extra notifications", state, msg,"IDLE")
+    GN.init_battle_mode()
 end
 
 ---Run different tests.
@@ -165,7 +168,7 @@ function GN.set_volume(v)
 end
 
 ---Enable testing mode. Receives notifications for outgoing messages.
-function GN.testing_mode()
+function GN.cmd_testing_mode()
     if not GN:is_gui_ready() then GN.on() end
         GN.testing = not GN.testing
         local state = GN.testing and "ON" or "OFF"
@@ -176,6 +179,6 @@ end
 ---@section Register and bind user commands.
 RegisterUserCommand("gn", GN.cmd)
 RegisterUserCommand("gn_target", GN.cmd_send_target)
-RegisterUserCommand("gn_testing", GN.testing_mode)
+RegisterUserCommand("gn_testing", GN.cmd_testing_mode)
 gkinterface.BindCommand(gkinterface.GetInputCodeByName("0"), "gn_target")
 ---@end

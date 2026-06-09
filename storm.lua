@@ -83,7 +83,6 @@ end
 function GN.send_storm_report()
     while #storm_temp_reports > 0 do
         local msg = table.remove(storm_temp_reports, 1)
---         GN.send_battle_messages(channel, msg)
         SendChat("/me "..tostring(msg), "CHANNEL", storm_chat_channel)
     end
 end
@@ -174,6 +173,14 @@ function GN.remove_storms_from_navmap()
             end
         end
     end
+end
+
+---Load the storm saved reports and joins to the storm channel.
+function GN.init_storm_reports()
+    if not GN.gn_enable then return end
+    if not GN.storms then return end
+	GN.load_storm_reports()
+    GN.join_chat_channel(storm_chat_channel)
 end
 
 ---END of ION STORMS
