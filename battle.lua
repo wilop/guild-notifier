@@ -201,5 +201,9 @@ function GN.init_battle_mode()
     if not GN.gn_enable then return end
     if not GN.mode_battle and not GN.extra_notifications then return end
     GN.join_chat_channel(GN.battle_channel)
+    if GN.mode_battle then
+        GN.mode_sound = false
+        GN.storms = false
+    end
 end
 ---END of BATTLE MODE
