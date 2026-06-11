@@ -103,11 +103,15 @@ function GN.sound_mode()
     local state = GN.mode_sound and "ON" or "OFF"
     local gui_state = GN.mode_sound and "HIDDEN" or "IDLE"
     if GN:set_gui_state(gui_state) then
-        GN.mode_battle = false
         local vol = tostring(VOLUME) or "3"
         GN.set_volume(vol)
         print("Guild Notifier: Sound mode "..state)
         print("Just plays sounds!")
+    end
+    if GN.mode_sound then
+        GN.mode_battle = false
+        GN.extra_notifications = false
+        GN.storms = false
     end
 end
 
