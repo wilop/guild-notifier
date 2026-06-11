@@ -10,8 +10,7 @@ function GN.battle_receiver:OnEvent(e, data)
     if not GN.mode_battle and not GN.extra_notifications then return end
     if not GN.battle_chat_events[e] or data == nil then return end
     if tonumber(data.channelid) and GN.vo_designated_channels[data.channelid] then return end
-    if GN.battle_channel ~= "GUILD" and tostring(data.channelid) ~= GN.battle_channel then return end
-    if GN.battle_channel == "GUILD" and tostring(data.channelid) == GN.battle_channel then return end
+    if GN.battle_destiny == "CHANNEL" and data.channelid ~= GN.battle_channel then return end
 
     if not GN.is_incoming(data.name) then return end
 
