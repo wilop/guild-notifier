@@ -191,8 +191,12 @@ end
 function GN.join_chat_channel(channel)
     if type(channel) ~= "number" then return end
     local active_channel = GetActiveChatChannel()
+    local joined_channels = GetJoinedChannels() or {}
+    for _,v in pairs(joined_channels) do
+        if v ==  channel then return end
+    end
     JoinChannel(channel)
-    JoinChannel(active_channel)
+    if active_channel then JoinChannel(active_channel) end
 end
 
 ---Joins to the battle channel.
