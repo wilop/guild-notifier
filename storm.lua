@@ -181,6 +181,10 @@ function GN.init_storm_reports()
     if not GN.storms then return end
 	GN.load_storm_reports()
     GN.join_chat_channel(storm_chat_channel)
+    if GN.storms then
+        GN.mode_battle = false
+        GN.mode_sound = false
+    end
 end
 
 ---END of ION STORMS
