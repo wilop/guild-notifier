@@ -58,15 +58,21 @@ ___GuildNotifier___  works only on the client side. The plugin does not share an
 > [MIT](./LICENSE)
 
 ## Author
-> _Otesten Vanar_ ([wilop](https://github.com/wilop))
+> _Otesten Vanar_ ([wilop](https://github.com/wilop)).
+
+## Testers.
+> ___Windows:___  
+> _Commander Azryayix Gyarz._  
+
+> ___Android:___  
+> _Cerys An Scath._  
 
 ## Credits:
-> _Commander Azryayix Gyarz_:  
-- Testing.  
+> ___Commander Azryayix Gyarz___:  
 - Original guild icon.  
  ![GUILD ICON](./assets/guild0.png)
  
-> [MixKit](https://mixkit.co/free-sound-effects/):  
+> _[MixKit](https://mixkit.co/free-sound-effects/):_  
 - Sound Effect "help" (Technology computer calculations).  
 - Sound Effect "group" (Retro game notification).  
 - Sound Effect "guild" (Technology notification).  
