@@ -19,22 +19,41 @@ function GN:init_gui_data()
     }
 end
 
+---Get the icons and wings size according to OS Platform for IDLE state.
+---@return string icons_size The size of the icons.
+---@return string wings_size The size of the wings.
+---@return integer wide The wide of the gui.
+function GN.get_platform_size()
+    local icons_size = "48x48"
+    local wings_size = "128x64"
+    local wide = 324
+    if GN.state == GN.states["IDLE"] then
+        if Platform == "iOS" or Platform == "Android" then
+            icons_size = "24x24"
+            wings_size = "64x32"
+            wide = 162
+        end
+    end
+    return icons_size, wings_size, wide
+end
+
 ---Create the gui to be displayed in HUD.
 function GN:create_gui()
     console_print("🔴 Begin of create_gui")
     local x_size =gkinterface.GetXResolution()
     local y_size =gkinterface.GetYResolution()
-    local x_margin = (x_size - 324) / 2
+    local icons_size, wings_size, wide = GN.get_platform_size()
+    local x_margin = (x_size - wide) / 2
 
-    self.gui_icon_left = iup.label {title="", image = GN.gui_data.icon, size="48x48", alignment = 'ACENTER'}
-    self.gui_icon_right = iup.label {title="", image = GN.gui_data.icon, size="48x48", alignment = 'ACENTER'}
+    self.gui_icon_left = iup.label {title="", image = GN.gui_data.icon, size=icons_size, alignment = 'ACENTER'}
+    self.gui_icon_right = iup.label {title="", image = GN.gui_data.icon, size=icons_size, alignment = 'ACENTER'}
     self.title = iup.label {title = GN.gui_data.title, expand = 'HORIZONTAL', alignment = "ACENTER", wordwrap = 'YES'}
     self.subtitle = iup.label {title = GN.gui_data.subtitle, expand = 'HORIZONTAL', alignment = "ACENTER", wordwrap = 'YES'}
 
     self.message = iup.label{title = GN.gui_data.msg, alignment = "ACENTER", multiline = 'YES', wordwrap = 'YES', scrollbar = 'NO', expand = 'YES'}
 
-    self.wing_left = iup.label {title="", image = GN.gui_data.wing_left, size="128x64", alignment = 'ACENTER'}
-    self.wing_right = iup.label {title="", image = GN.gui_data.wing_right, size="128x64", alignment = 'ACENTER'}
+    self.wing_left = iup.label {title="", image = GN.gui_data.wing_left, size=wings_size, alignment = 'ACENTER'}
+    self.wing_right = iup.label {title="", image = GN.gui_data.wing_right, size=wings_size, alignment = 'ACENTER'}
 
     local top_separator = iup.label {title = '', image = '', size = 'x1', expand = 'HORIZONTAL', fgcolor = '40 180 240 125 *'}
     local bottom_separator = iup.label {title = '', image = '', size = "x2", expand = 'HORIZONTAL',fgcolor = '40 180 240 125 *'}
