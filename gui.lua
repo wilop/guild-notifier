@@ -224,7 +224,7 @@ end
 ---@param state string A gui state to be set.
 ---@return boolean
 function GN:set_gui_state(state)
-    if GN.delay_timer and GN.delay_timer:IsActive() then return false end
+--     if GN.delay_timer and GN.delay_timer:IsActive() then return false end
     console_print("🔴 Begin of set_gui_state")
     if not GN.states[state] then return false end
     if GN.states[state] == GN.state then return false end
@@ -296,8 +296,11 @@ end
 function GN:rHUDxscale(e)
     GN.delay = true
     GN:set_gui_state("HIDDEN")
-    GN:set_gui_state("IDLE")
+    if not self:is_gui_ready() then
+        GN.state = GN.states["HIDDEN"]
+    end
     GN.delay = false
+    GN:set_gui_state("IDLE")
     if GN.testing then
         print(e)
         print(os.time())
