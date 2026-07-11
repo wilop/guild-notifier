@@ -3,10 +3,10 @@
 declare ('GN', GN or {})
 
 GN.info = {
-    description = "Guild Notifier: notifications for yout incoming messages.",
+    description = "Guild Notifier: notifications for your incoming messages.",
     author = "Otesten Vanar (wilop)",
     Github = "https://github.com/wilop/guild-notifier",
-    version = "1.0.0-HEAD",
+    version = "1.0.0",
 }
 
 dofile("config.lua")
